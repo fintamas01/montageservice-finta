@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# SMTP credentials
+mail-config.php
+
+# Composer dependencies
+backend/vendor/

@@ -1,0 +1,135 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout
+  title="Vielen Dank | Montageservice Finta"
+  description="Vielen Dank für Ihre Projektanfrage."
+  noindex={true}
+>
+  <Header />
+
+  <main class="thank-you">
+    <div class="thank-you-inner">
+      <div class="check">✓</div>
+
+      <p class="eyebrow">
+        Anfrage gesendet
+      </p>
+
+      <h1>
+        Vielen Dank für<br />
+        <em>Ihre Anfrage.</em>
+      </h1>
+
+      <p class="description">
+        Ihre Projektanfrage wurde erfolgreich übermittelt.
+        Wir melden uns persönlich bei Ihnen.
+      </p>
+
+      <a href="/" class="back-button">
+        <span>Zur Startseite</span>
+        <span>↗</span>
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .thank-you {
+    min-height: 88svh;
+
+    display: flex;
+    align-items: center;
+
+    padding:
+      190px
+      24px
+      120px;
+
+    background: var(--anthracite-dark);
+    color: white;
+  }
+
+  .thank-you-inner {
+    width: min(1150px, 100%);
+    margin: 0 auto;
+  }
+
+  .check {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 55px;
+
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+
+    color: var(--beige);
+  }
+
+  .eyebrow {
+    margin-bottom: 25px;
+
+    color: var(--beige);
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+
+    font-size: clamp(68px, 9vw, 140px);
+    font-weight: 400;
+
+    line-height: 0.83;
+    letter-spacing: -0.045em;
+  }
+
+  h1 em {
+    color: var(--beige);
+    font-weight: 400;
+  }
+
+  .description {
+    max-width: 480px;
+
+    margin-top: 55px;
+
+    color: rgba(255, 255, 255, 0.6);
+
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .back-button {
+    width: min(270px, 100%);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 45px;
+
+    padding: 18px 20px 18px 25px;
+
+    background: var(--beige);
+    color: var(--anthracite-dark);
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+</style>

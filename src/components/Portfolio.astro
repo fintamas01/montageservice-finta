@@ -1,0 +1,485 @@
+<section class="portfolio" id="referenzen">
+  <div class="portfolio-header">
+    <div class="portfolio-label">
+      <span>03</span>
+      <span class="line"></span>
+      <span>Referenzen</span>
+    </div>
+
+    <div class="portfolio-title" data-reveal>
+      <p class="eyebrow">Unsere Arbeiten</p>
+
+      <h2>
+        Ausgewählte Projekte.<br />
+        <em>Sauber umgesetzt.</em>
+      </h2>
+    </div>
+
+    <p class="portfolio-description">
+      Ein Einblick in ausgewählte Montagearbeiten – von modernen
+      Küchen bis hin zu Möbeln und Türen.
+    </p>
+  </div>
+
+  <div class="portfolio-grid">
+    <article
+        class="project project-large project-kitchen"
+        data-reveal
+    >
+      <div class="project-image"></div>
+      <div class="project-overlay"></div>
+
+      <div class="project-number">01</div>
+
+      <div class="project-info">
+        <div>
+          <span>Küchenmontage</span>
+          <h3>Moderne Küche</h3>
+        </div>
+
+        <span class="project-arrow">↗</span>
+      </div>
+    </article>
+
+    <article
+        class="project project-small project-furniture"
+        data-reveal
+        data-reveal-delay="1"
+    >
+      <div class="project-image"></div>
+      <div class="project-overlay"></div>
+
+      <div class="project-number">02</div>
+
+      <div class="project-info">
+        <div>
+          <span>Möbelmontage</span>
+          <h3>Einbaumöbel</h3>
+        </div>
+
+        <span class="project-arrow">↗</span>
+      </div>
+    </article>
+
+    <article
+        class="project project-small project-door"
+        data-reveal
+        data-reveal-delay="2"
+    >
+      <div class="project-image"></div>
+      <div class="project-overlay"></div>
+
+      <div class="project-number">03</div>
+
+      <div class="project-info">
+        <div>
+          <span>Türen & Zargen</span>
+          <h3>Innentüren</h3>
+        </div>
+
+        <span class="project-arrow">↗</span>
+      </div>
+    </article>
+
+    <article
+        class="project project-wide project-kitchen-two"
+        data-reveal
+    >
+      <div class="project-image"></div>
+      <div class="project-overlay"></div>
+
+      <div class="project-number">04</div>
+
+      <div class="project-info">
+        <div>
+          <span>Küchenmontage</span>
+          <h3>Küche nach Maß</h3>
+        </div>
+
+        <span class="project-arrow">↗</span>
+      </div>
+    </article>
+  </div>
+
+  <div class="portfolio-footer">
+    <div class="portfolio-line"></div>
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Weitere Arbeiten auf Instagram
+      <span>↗</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .portfolio {
+    padding:
+      clamp(110px, 12vw, 190px)
+      clamp(24px, 6vw, 110px);
+
+    background: var(--off-white);
+  }
+
+  .portfolio-header {
+    width: min(1350px, 100%);
+    margin: 0 auto clamp(70px, 8vw, 120px);
+
+    display: grid;
+    grid-template-columns: 180px 1fr 360px;
+    gap: 50px;
+    align-items: end;
+  }
+
+  .portfolio-label {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    padding-bottom: 14px;
+
+    color: #8e8982;
+
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-label .line {
+    width: 25px;
+    height: 1px;
+
+    background: #aca49a;
+  }
+
+  .eyebrow {
+    margin-bottom: 24px;
+
+    color: #917f6a;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(55px, 6vw, 95px);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+
+  h2 em {
+    color: #9a8873;
+    font-weight: 400;
+  }
+
+  .portfolio-description {
+    padding-bottom: 8px;
+
+    color: #77726b;
+
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .portfolio-grid {
+    width: min(1350px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    grid-template-rows: 430px 520px 390px;
+    gap: 18px;
+  }
+
+  .project {
+    position: relative;
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 28px;
+
+    background-size: cover;
+    background-position: center;
+
+    color: white;
+
+    cursor: pointer;
+  }
+
+  .project-large {
+    grid-row: 1 / span 2;
+  }
+
+  .project-wide {
+    grid-column: 1 / span 2;
+  }
+
+  .project-kitchen {
+    --project-image:
+      url("/images/reference-kitchen-01.jpeg");
+
+    background-color: #3a3631;
+  }
+
+  .project-furniture {
+    --project-image:
+      url("/images/reference-furniture-01.jpeg");
+
+    background-color: #514a42;
+  }
+
+  .project-door {
+    --project-image:
+      url("/images/reference-door-01.jpeg");
+
+    background-color: #35312c;
+  }
+
+  .project-kitchen-two {
+    --project-image:
+      url("/images/reference-kitchen-02.jpeg");
+
+    background-color: #474038;
+  }
+
+  .project-image {
+    position: absolute;
+    inset: 0;
+
+    background-image: var(--project-image);
+    background-size: cover;
+    background-position: center;
+
+    transform: scale(1);
+
+    transition:
+      transform 1.15s
+      cubic-bezier(0.2, 0.65, 0.3, 1);
+
+    will-change: transform;
+  }
+
+  .project:hover .project-image {
+    transform: scale(1.055);
+  }
+
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+
+    z-index: 1;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(15, 15, 14, 0.04),
+        rgba(15, 15, 14, 0.12) 45%,
+        rgba(15, 15, 14, 0.75)
+      );
+
+    transition: background 0.45s ease;
+  }
+
+  .project:hover .project-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(15, 15, 14, 0.08),
+        rgba(15, 15, 14, 0.22) 45%,
+        rgba(15, 15, 14, 0.82)
+      );
+}
+
+  .project-number,
+  .project-info {
+    position: relative;
+    z-index: 2;
+  }
+
+  .project-number {
+    color: rgba(255, 255, 255, 0.7);
+
+    font-size: 9px;
+    letter-spacing: 0.16em;
+  }
+
+  .project-info {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .project-info span {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: rgba(255, 255, 255, 0.64);
+
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .project-info h3 {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 3.5vw, 54px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .project-arrow {
+    flex: 0 0 auto;
+
+    width: 46px;
+    height: 46px;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.42);
+
+    color: white !important;
+
+    font-size: 15px !important;
+
+    transition:
+      background 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .project:hover .project-arrow {
+    background: var(--beige);
+    border-color: var(--beige);
+
+    color: var(--anthracite-dark) !important;
+
+    transform: rotate(45deg);
+  }
+
+  .portfolio-footer {
+    width: min(1350px, 100%);
+
+    display: flex;
+    align-items: center;
+    gap: 35px;
+
+    margin: 55px auto 0;
+  }
+
+  .portfolio-line {
+    flex: 1;
+    height: 1px;
+
+    background: #d7cec3;
+  }
+
+  .portfolio-footer a {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    transition: gap 0.3s ease;
+  }
+
+  .portfolio-footer a:hover {
+    gap: 25px;
+  }
+
+  @media (max-width: 1000px) {
+    .portfolio-header {
+      grid-template-columns: 1fr;
+      gap: 35px;
+    }
+
+    .portfolio-label {
+      display: none;
+    }
+
+    .portfolio-description {
+      max-width: 500px;
+    }
+
+    .portfolio-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 600px 420px 420px;
+    }
+
+    .project-large {
+      grid-column: 1 / span 2;
+      grid-row: auto;
+    }
+
+    .project-wide {
+      grid-column: 1 / span 2;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .portfolio {
+      padding:
+        90px
+        20px;
+    }
+
+    .portfolio-header {
+      gap: 28px;
+
+      margin-bottom: 55px;
+    }
+
+    h2 {
+      font-size: clamp(50px, 14vw, 72px);
+    }
+
+    .portfolio-description {
+      font-size: 12px;
+    }
+
+    .portfolio-grid {
+      display: flex;
+      flex-direction: column;
+
+      gap: 10px;
+    }
+
+    .project {
+      min-height: 430px;
+
+      padding: 22px;
+    }
+
+    .project-wide {
+      min-height: 360px;
+    }
+
+    .project-info h3 {
+      font-size: 38px;
+    }
+
+    .portfolio-footer {
+      margin-top: 40px;
+    }
+  }
+</style>

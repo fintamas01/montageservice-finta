@@ -1,17 +1,36 @@
 ---
+import Layout from "../layouts/Layout.astro";
 
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Intro from "../components/Intro.astro";
+import Services from "../components/Services.astro";
+import Statement from "../components/Statement.astro";
+import Portfolio from "../components/Portfolio.astro";
+import Process from "../components/Process.astro";
+import About from "../components/About.astro";
+import Instagram from "../components/Instagram.astro";
+import ContactCTA from "../components/ContactCTA.astro";
+import Footer from "../components/Footer.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Montageservice Finta | Küchen-, Möbel- & Türmontage"
+  description="Professionelle Küchen-, Möbel- und Türmontage mit präziser und sauberer Ausführung. Montageservice Finta – zuverlässig und persönlich."
+>
+  <Header />
+
+  <main>
+    <Hero />
+    <Intro />
+    <Services />
+    <Statement />
+    <Portfolio />
+    <Process />
+    <About />
+    <Instagram />
+    <ContactCTA />
+  </main>
+
+  <Footer />
+</Layout>

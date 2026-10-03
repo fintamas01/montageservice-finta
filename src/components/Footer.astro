@@ -1,0 +1,232 @@
+<footer class="footer">
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <span class="brand-small">Montageservice</span>
+      <strong>Finta</strong>
+
+      <p>
+        Professionelle Küchen-, Möbel- und Türmontage.
+      </p>
+    </div>
+
+    <div class="footer-column">
+      <span class="column-title">Navigation</span>
+
+      <a href="#leistungen">Leistungen</a>
+      <a href="#referenzen">Referenzen</a>
+      <a href="#ueber-uns">Über uns</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+
+    <div class="footer-column">
+      <span class="column-title">Social</span>
+
+      <a
+        href="https://www.instagram.com/montageservicefinta/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram ↗
+      </a>
+    </div>
+
+    <div class="footer-column">
+      <span class="column-title">Kontakt</span>
+
+      <span>Telefon folgt</span>
+      <span>E-Mail folgt</span>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <span>© {new Date().getFullYear()} Montageservice Finta</span>
+
+    <div>
+      <a href="/impressum">Impressum</a>
+      <a href="/datenschutz">Datenschutz</a>
+    </div>
+
+    <span>Handwerk mit Präzision.</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding:
+      90px
+      clamp(24px, 6vw, 110px)
+      35px;
+
+    background: var(--anthracite-dark);
+    color: white;
+  }
+
+  .footer-main {
+    width: min(1350px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+
+    padding-bottom: 90px;
+  }
+
+  .footer-brand {
+    max-width: 320px;
+  }
+
+  .brand-small {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: var(--beige);
+
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .footer-brand strong {
+    display: block;
+
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: .05em;
+  }
+
+  .footer-brand p {
+    max-width: 250px;
+
+    margin-top: 28px;
+
+    color: rgba(255,255,255,.48);
+
+    font-size: 11px;
+    line-height: 1.8;
+  }
+
+  .footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+
+    color: rgba(255,255,255,.6);
+
+    font-size: 11px;
+  }
+
+  .column-title {
+    margin-bottom: 13px;
+
+    color: var(--beige);
+
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .footer-column a {
+    transition: color .25s ease;
+  }
+
+  .footer-column a:hover {
+    color: white;
+  }
+
+  .footer-bottom {
+    width: min(1350px, 100%);
+    margin: 0 auto;
+
+    padding-top: 30px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 30px;
+
+    border-top: 1px solid rgba(255,255,255,.1);
+
+    color: rgba(255,255,255,.35);
+
+    font-size: 9px;
+    letter-spacing: .08em;
+  }
+
+  .footer-bottom div {
+    display: flex;
+    gap: 30px;
+  }
+
+  .footer-bottom > span:last-child {
+    text-align: right;
+  }
+
+  @media (max-width: 850px) {
+    .footer-main {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .footer-brand {
+      grid-column: 1 / span 2;
+    }
+
+    .footer-bottom {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-bottom > span:last-child {
+      text-align: left;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .footer {
+      padding:
+        75px
+        20px
+        28px;
+    }
+
+    .footer-main {
+      grid-template-columns: 1fr;
+
+      gap: 42px;
+
+      padding-bottom: 65px;
+    }
+
+    .footer-brand {
+      grid-column: auto;
+    }
+
+    .footer-brand strong {
+      font-size: 46px;
+    }
+
+    .footer-bottom {
+      grid-template-columns: 1fr;
+
+      gap: 18px;
+
+      padding-top: 25px;
+    }
+
+    .footer-bottom div {
+      flex-wrap: wrap;
+
+      gap: 12px 22px;
+    }
+
+    .footer-bottom > span:last-child {
+      text-align: left;
+    }
+  }
+</style>

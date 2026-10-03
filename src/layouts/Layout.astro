@@ -1,0 +1,186 @@
+---
+import "@fontsource/cormorant-garamond/400.css";
+import "@fontsource/cormorant-garamond/500.css";
+import "@fontsource/cormorant-garamond/600.css";
+
+import "@fontsource/manrope/400.css";
+import "@fontsource/manrope/500.css";
+import "@fontsource/manrope/600.css";
+
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+}
+
+const {
+  title = "Montageservice Finta",
+  description = "Professionelle Küchen-, Möbel- und Türmontage.",
+  image = "/images/og-image.jpg",
+  noindex = false,
+} = Astro.props;
+
+const canonicalURL = new URL(
+  Astro.url.pathname,
+  Astro.site ?? Astro.url
+);
+
+const socialImage = new URL(
+  image,
+  Astro.site ?? Astro.url
+);
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>{title}</title>
+
+    <meta
+      name="description"
+      content={description}
+    />
+
+    <link
+      rel="canonical"
+      href={canonicalURL}
+    />
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+
+    <meta
+      name="theme-color"
+      content="#141413"
+    />
+
+    {
+      noindex && (
+        <meta
+          name="robots"
+          content="noindex, nofollow"
+        />
+      )
+    }
+
+    <!-- Open Graph -->
+
+    <meta
+      property="og:type"
+      content="website"
+    />
+
+    <meta
+      property="og:locale"
+      content="de_DE"
+    />
+
+    <meta
+      property="og:site_name"
+      content="Montageservice Finta"
+    />
+
+    <meta
+      property="og:title"
+      content={title}
+    />
+
+    <meta
+      property="og:description"
+      content={description}
+    />
+
+    <meta
+      property="og:url"
+      content={canonicalURL}
+    />
+
+    <meta
+      property="og:image"
+      content={socialImage}
+    />
+
+    <!-- X / Twitter -->
+
+    <meta
+      name="twitter:card"
+      content="summary_large_image"
+    />
+
+    <meta
+      name="twitter:title"
+      content={title}
+    />
+
+    <meta
+      name="twitter:description"
+      content={description}
+    />
+
+    <meta
+      name="twitter:image"
+      content={socialImage}
+    />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "HomeAndConstructionBusiness",
+
+        name: "Montageservice Finta",
+
+        url:
+          Astro.site?.toString() ??
+          canonicalURL.toString(),
+
+        description:
+          "Professionelle Küchen-, Möbel- und Türmontage.",
+
+        sameAs: [
+          "https://www.instagram.com/montageservicefinta/"
+        ]
+      })}
+    />
+  </head>
+
+  <body>
+    <slot />
+
+    <script>
+        const revealElements = document.querySelectorAll("[data-reveal]");
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+                }
+            });
+            },
+            {
+            threshold: 0.12,
+            rootMargin: "0px 0px -60px 0px",
+            }
+        );
+
+        revealElements.forEach((element) => {
+            observer.observe(element);
+        });
+    </script>
+  </body>
+</html>

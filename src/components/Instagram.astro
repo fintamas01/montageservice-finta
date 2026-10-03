@@ -1,0 +1,287 @@
+<section class="instagram">
+  <div class="instagram-header" data-reveal>
+    <div>
+      <p class="eyebrow">Aktuelle Arbeiten</p>
+
+      <h2>
+        Einblicke in<br />
+        <em>unsere Projekte.</em>
+      </h2>
+    </div>
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-item item-one" 
+      data-reveal 
+      data-reveal-delay="1"
+    >
+      <span>@montageservicefinta</span>
+      <span>↗</span>
+    </a>
+  </div>
+
+  <div class="instagram-grid">
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-item item-one"
+      data-reveal
+        data-reveal-delay="2"
+    >
+      <span>01</span>
+      <div class="instagram-arrow">↗</div>
+    </a>
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-item item-two"
+      data-reveal
+        data-reveal-delay="3"
+    >
+      <span>02</span>
+      <div class="instagram-arrow">↗</div>
+    </a>
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-item item-three"
+      data-reveal
+        data-reveal-delay="4"
+    >
+      <span>03</span>
+      <div class="instagram-arrow">↗</div>
+    </a>
+
+    <a
+      href="https://www.instagram.com/montageservicefinta/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-item item-four"
+    >
+      <span>04</span>
+      <div class="instagram-arrow">↗</div>
+    </a>
+
+  </div>
+</section>
+
+<style>
+  .instagram {
+    padding:
+      clamp(110px, 11vw, 180px)
+      clamp(24px, 6vw, 110px);
+
+    background: #e8ded1;
+  }
+
+  .instagram-header {
+    width: min(1350px, 100%);
+    margin: 0 auto 70px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 50px;
+  }
+
+  .eyebrow {
+    margin-bottom: 24px;
+
+    color: #8e765f;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(55px, 6vw, 90px);
+    font-weight: 400;
+    line-height: .92;
+    letter-spacing: -.035em;
+  }
+
+  h2 em {
+    color: #98816a;
+    font-weight: 400;
+  }
+
+  .instagram-link {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #b8a995;
+
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+
+    transition: gap .3s ease;
+  }
+
+  .instagram-link:hover {
+    gap: 26px;
+  }
+
+  .instagram-grid {
+    width: min(1350px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .instagram-item {
+    position: relative;
+
+    aspect-ratio: 4 / 5;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    padding: 20px;
+
+    overflow: hidden;
+
+    background-size: cover;
+    background-position: center;
+
+    color: white;
+
+    transition:
+      transform 0.45s
+      cubic-bezier(0.2, 0.65, 0.3, 1);
+  }
+
+  .instagram-item:hover {
+    transform: translateY(-7px);
+  }
+
+  .instagram-item::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background: rgba(15,15,14,.12);
+
+    transition: background .35s ease;
+  }
+
+  .instagram-item:hover::after {
+    background: rgba(15,15,14,.32);
+  }
+
+  .instagram-item > span,
+  .instagram-arrow {
+    position: relative;
+    z-index: 2;
+  }
+
+  .instagram-item > span {
+    font-size: 9px;
+    letter-spacing: .15em;
+  }
+
+  .instagram-arrow {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 1px solid rgba(255,255,255,.45);
+
+    transition:
+      background .3s ease,
+      color .3s ease;
+  }
+
+  .instagram-item:hover .instagram-arrow {
+    background: var(--beige);
+    color: var(--anthracite-dark);
+  }
+
+  .item-one {
+    background-image: url("/images/instagram-01.jpeg");
+    background-color: #433d37;
+  }
+
+  .item-two {
+    background-image: url("/images/instagram-02.jpeg");
+    background-color: #595047;
+  }
+
+  .item-three {
+    background-image: url("/images/instagram-03.jpeg");
+    background-color: #38332e;
+  }
+
+  .item-four {
+    background-image: url("/images/instagram-04.jpeg");
+    background-color: #514940;
+  }
+
+  @media (max-width: 900px) {
+    .instagram-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .instagram-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 550px) {
+    .instagram {
+      padding:
+        90px
+        20px;
+    }
+
+    .instagram-header {
+      gap: 30px;
+
+      margin-bottom: 50px;
+    }
+
+    h2 {
+      font-size: clamp(50px, 14vw, 72px);
+    }
+
+    .instagram-grid {
+      grid-template-columns: 1fr 1fr;
+
+      gap: 6px;
+    }
+
+    .instagram-item {
+      padding: 12px;
+    }
+
+    .instagram-arrow {
+      width: 30px;
+      height: 30px;
+
+      font-size: 12px;
+    }
+  }
+</style>

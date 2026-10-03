@@ -1,0 +1,185 @@
+---
+import Layout from "./Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heading: string;
+}
+
+const {
+  title,
+  description,
+  eyebrow,
+  heading,
+} = Astro.props;
+---
+
+<Layout
+  title={title}
+  description={description}
+>
+  <Header />
+
+  <main>
+    <section class="legal-hero">
+      <div class="legal-hero-inner">
+        <p>{eyebrow}</p>
+
+        <h1>{heading}</h1>
+      </div>
+    </section>
+
+    <section class="legal-content">
+      <div class="legal-inner">
+        <slot />
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .legal-hero {
+    min-height: 440px;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding:
+      170px
+      clamp(24px, 6vw, 110px)
+      80px;
+
+    background: var(--anthracite-dark);
+    color: white;
+  }
+
+  .legal-hero-inner {
+    width: min(1200px, 100%);
+    margin: 0 auto;
+  }
+
+  .legal-hero p {
+    margin-bottom: 22px;
+
+    color: var(--beige);
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .legal-hero h1 {
+    font-family: var(--font-display);
+
+    font-size: clamp(68px, 8vw, 120px);
+    font-weight: 400;
+
+    line-height: .85;
+
+    letter-spacing: -.04em;
+  }
+
+  .legal-content {
+    padding:
+      clamp(90px, 10vw, 150px)
+      clamp(24px, 6vw, 110px);
+
+    background: var(--off-white);
+  }
+
+  .legal-inner {
+    width: min(900px, 100%);
+    margin: 0 auto;
+  }
+
+  .legal-inner :global(h2) {
+    margin:
+      70px
+      0
+      22px;
+
+    font-family: var(--font-display);
+
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 400;
+
+    line-height: 1;
+  }
+
+  .legal-inner :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .legal-inner :global(h3) {
+    margin:
+      38px
+      0
+      14px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .legal-inner :global(p),
+  .legal-inner :global(li) {
+    color: #706b65;
+
+    font-size: 13px;
+    line-height: 1.95;
+  }
+
+  .legal-inner :global(p + p) {
+    margin-top: 18px;
+  }
+
+  .legal-inner :global(ul) {
+    margin:
+      20px
+      0
+      20px
+      20px;
+  }
+
+  .legal-inner :global(a) {
+    color: #806b55;
+
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .placeholder {
+    padding: 20px 24px;
+
+    background: #e8ded1;
+
+    border-left: 3px solid #9b866f;
+  }
+
+  @media (max-width: 600px) {
+    .legal-hero {
+      min-height: 360px;
+
+      padding:
+        145px
+        22px
+        60px;
+    }
+
+    .legal-content {
+      padding:
+        80px
+        22px;
+    }
+  }
+</style>
