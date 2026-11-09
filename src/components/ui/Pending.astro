@@ -1,0 +1,23 @@
+---
+/**
+ * Gibt einen bestätigten Wert aus – oder einen deutlich markierten
+ * Hinweis, dass die Angabe noch fehlt (nie einen erfundenen Wert).
+ */
+interface Props {
+  value: string | null | undefined;
+  label: string;
+}
+
+const { value, label } = Astro.props;
+---
+
+{value ? <>{value}</> : <span class="pending">[{label} – Angabe folgt]</span>}
+
+<style>
+  .pending {
+    padding: 0 4px;
+    background: var(--color-sand-light);
+    color: var(--color-accent);
+    font-style: italic;
+  }
+</style>

@@ -1,186 +1,118 @@
 ---
 import "@fontsource/cormorant-garamond/400.css";
+import "@fontsource/cormorant-garamond/400-italic.css";
 import "@fontsource/cormorant-garamond/500.css";
-import "@fontsource/cormorant-garamond/600.css";
-
 import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
 import "@fontsource/manrope/600.css";
 
 import "../styles/global.css";
 
+import { getImage } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { images, site } from "../data/site";
+
 interface Props {
-  title?: string;
-  description?: string;
-  image?: string;
+  title: string;
+  description: string;
   noindex?: boolean;
+  structuredData?: Record<string, unknown>[];
 }
 
-const {
-  title = "Montageservice Finta",
-  description = "Professionelle Küchen-, Möbel- und Türmontage.",
-  image = "/images/og-image.jpg",
-  noindex = false,
-} = Astro.props;
+const { title, description, noindex = false, structuredData = [] } = Astro.props;
 
-const canonicalURL = new URL(
-  Astro.url.pathname,
-  Astro.site ?? Astro.url
-);
+const siteUrl = Astro.site ?? new URL(site.url);
+// Build-Format "file" erzeugt /anfrage.html – öffentlich gilt /anfrage.
+const canonicalPath =
+  Astro.url.pathname.replace(/\.html$/, "").replace(/\/index$/, "/").replace(/(.)\/$/, "$1") || "/";
+const canonicalURL = new URL(canonicalPath, siteUrl);
 
-const socialImage = new URL(
-  image,
-  Astro.site ?? Astro.url
-);
+const ogImage = await getImage({
+  src: images.hero,
+  width: 1200,
+  height: 630,
+  fit: "cover",
+  format: "jpg",
+  quality: 80,
+});
+const socialImage = new URL(ogImage.src, siteUrl);
 ---
 
 <!doctype html>
 <html lang="de">
   <head>
     <meta charset="UTF-8" />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.add("js");</script>
 
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
 
-    <meta
-      name="description"
-      content={description}
-    />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#141413" />
+    <meta name="format-detection" content="telephone=no" />
 
-    <link
-      rel="canonical"
-      href={canonicalURL}
-    />
-
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="/favicon.svg"
-    />
-
-    <meta
-      name="theme-color"
-      content="#141413"
-    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={images.heroAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
 
     {
-      noindex && (
-        <meta
-          name="robots"
-          content="noindex, nofollow"
-        />
-      )
+      structuredData.map((data) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(data)} />
+      ))
     }
-
-    <!-- Open Graph -->
-
-    <meta
-      property="og:type"
-      content="website"
-    />
-
-    <meta
-      property="og:locale"
-      content="de_DE"
-    />
-
-    <meta
-      property="og:site_name"
-      content="Montageservice Finta"
-    />
-
-    <meta
-      property="og:title"
-      content={title}
-    />
-
-    <meta
-      property="og:description"
-      content={description}
-    />
-
-    <meta
-      property="og:url"
-      content={canonicalURL}
-    />
-
-    <meta
-      property="og:image"
-      content={socialImage}
-    />
-
-    <!-- X / Twitter -->
-
-    <meta
-      name="twitter:card"
-      content="summary_large_image"
-    />
-
-    <meta
-      name="twitter:title"
-      content={title}
-    />
-
-    <meta
-      name="twitter:description"
-      content={description}
-    />
-
-    <meta
-      name="twitter:image"
-      content={socialImage}
-    />
-
-    <script
-      type="application/ld+json"
-      set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "HomeAndConstructionBusiness",
-
-        name: "Montageservice Finta",
-
-        url:
-          Astro.site?.toString() ??
-          canonicalURL.toString(),
-
-        description:
-          "Professionelle Küchen-, Möbel- und Türmontage.",
-
-        sameAs: [
-          "https://www.instagram.com/montageservicefinta/"
-        ]
-      })}
-    />
   </head>
 
   <body>
-    <slot />
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+
+    <Header />
+
+    <main id="inhalt" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
 
     <script>
-        const revealElements = document.querySelectorAll("[data-reveal]");
+      const revealElements = document.querySelectorAll<HTMLElement>("[data-reveal]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+      if (reduceMotion || !("IntersectionObserver" in window)) {
+        revealElements.forEach((el) => el.classList.add("is-visible"));
+      } else {
         const observer = new IntersectionObserver(
-            (entries) => {
+          (entries) => {
             entries.forEach((entry) => {
-                if (entry.isIntersecting) {
+              if (entry.isIntersecting) {
                 entry.target.classList.add("is-visible");
                 observer.unobserve(entry.target);
-                }
+              }
             });
-            },
-            {
-            threshold: 0.12,
-            rootMargin: "0px 0px -60px 0px",
-            }
+          },
+          { threshold: 0.12, rootMargin: "0px 0px -40px 0px" },
         );
 
-        revealElements.forEach((element) => {
-            observer.observe(element);
-        });
+        revealElements.forEach((el) => observer.observe(el));
+      }
     </script>
   </body>
 </html>
+
+<style>
+  main:focus {
+    outline: none;
+  }
+</style>

@@ -1,133 +1,59 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import Icon from "../components/ui/Icon.astro";
 ---
 
 <Layout
   title="Seite nicht gefunden | Montageservice Finta"
-  description="Die angeforderte Seite wurde nicht gefunden."
-  noindex={true}
+  description="Die angeforderte Seite wurde nicht gefunden. Zurück zur Startseite von Montageservice Finta."
+  noindex
 >
-  <Header />
+  <section class="status-page surface-dark on-dark">
+    <div class="container">
+      <p class="eyebrow">Fehler 404 · Seite nicht gefunden</p>
 
-  <main class="error-page">
-    <div class="error-inner">
-      <span class="error-number">
-        404
-      </span>
-
-      <p class="eyebrow">
-        Seite nicht gefunden
-      </p>
-
-      <h1>
+      <h1 class="display-l">
         Hier gibt es<br />
         <em>nichts zu montieren.</em>
       </h1>
 
-      <p class="description">
-        Die gewünschte Seite konnte leider nicht gefunden werden.
+      <p class="lead">
+        Die gewünschte Seite existiert nicht oder wurde verschoben. Über die
+        Startseite finden Sie alle Leistungen und Referenzen.
       </p>
 
-      <a href="/" class="button">
-        <span>Zur Startseite</span>
-        <span>↗</span>
-      </a>
+      <div class="actions">
+        <a href="/" class="btn btn--sand">
+          Zur Startseite
+          <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
+        </a>
+        <a href="/anfrage" class="text-link">
+          Montage anfragen
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </div>
     </div>
-  </main>
-
-  <Footer />
+  </section>
 </Layout>
 
 <style>
-  .error-page {
-    min-height: 90svh;
-
+  .status-page {
+    min-height: 88svh;
     display: flex;
     align-items: center;
-
-    padding:
-      170px
-      24px
-      110px;
-
-    background: var(--anthracite-dark);
-    color: white;
+    padding-top: calc(var(--header-height) + 64px);
+    padding-bottom: 96px;
   }
 
-  .error-inner {
-    width: min(1150px, 100%);
-    margin: 0 auto;
+  .lead {
+    margin-top: 36px;
   }
 
-  .error-number {
-    display: block;
-
-    margin-bottom: 40px;
-
-    color: rgba(255,255,255,.28);
-
-    font-size: 10px;
-    letter-spacing: .25em;
-  }
-
-  .eyebrow {
-    margin-bottom: 25px;
-
-    color: var(--beige);
-
-    font-size: 10px;
-    font-weight: 600;
-
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-  h1 {
-    font-family: var(--font-display);
-
-    font-size: clamp(65px, 9vw, 135px);
-    font-weight: 400;
-
-    line-height: .84;
-    letter-spacing: -.045em;
-  }
-
-  h1 em {
-    color: var(--beige);
-    font-weight: 400;
-  }
-
-  .description {
-    max-width: 450px;
-
-    margin-top: 48px;
-
-    color: rgba(255,255,255,.55);
-
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  .button {
-    width: min(260px, 100%);
-
+  .actions {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
-
+    gap: 20px 36px;
     margin-top: 40px;
-
-    padding: 19px 22px;
-
-    background: var(--beige);
-    color: var(--anthracite-dark);
-
-    font-size: 10px;
-    font-weight: 600;
-
-    letter-spacing: .1em;
-    text-transform: uppercase;
   }
 </style>

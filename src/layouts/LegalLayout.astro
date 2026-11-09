@@ -1,185 +1,113 @@
 ---
 import Layout from "./Layout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
+import PageHero from "../components/PageHero.astro";
+import Icon from "../components/ui/Icon.astro";
 
 interface Props {
   title: string;
   description: string;
   eyebrow: string;
   heading: string;
+  /** true, solange Pflichtangaben fehlen – zeigt einen Hinweis an. */
+  incomplete?: boolean;
+  updated: string;
 }
 
-const {
-  title,
-  description,
-  eyebrow,
-  heading,
-} = Astro.props;
+const { title, description, eyebrow, heading, incomplete = false, updated } = Astro.props;
 ---
 
-<Layout
-  title={title}
-  description={description}
->
-  <Header />
+<Layout title={title} description={description}>
+  <PageHero eyebrow={eyebrow} title={heading} size="compact" />
 
-  <main>
-    <section class="legal-hero">
-      <div class="legal-hero-inner">
-        <p>{eyebrow}</p>
+  <section class="section surface-paper legal-section">
+    <div class="container--narrow legal-content">
+      {
+        incomplete && (
+          <div class="legal-notice" role="note">
+            <Icon name="alert" size={20} />
+            <p>
+              <strong>Hinweis:</strong> Einige Pflichtangaben werden derzeit
+              noch ergänzt.
+            </p>
+          </div>
+        )
+      }
 
-        <h1>{heading}</h1>
-      </div>
-    </section>
+      <slot />
 
-    <section class="legal-content">
-      <div class="legal-inner">
-        <slot />
-      </div>
-    </section>
-  </main>
-
-  <Footer />
+      <p class="legal-updated">Stand: {updated}</p>
+    </div>
+  </section>
 </Layout>
 
 <style>
-  .legal-hero {
-    min-height: 440px;
+  .legal-section {
+    padding-top: clamp(56px, 7vw, 96px);
+  }
 
+  .legal-notice {
     display: flex;
-    align-items: flex-end;
-
-    padding:
-      170px
-      clamp(24px, 6vw, 110px)
-      80px;
-
-    background: var(--anthracite-dark);
-    color: white;
+    gap: 14px;
+    margin-bottom: 48px;
+    padding: 18px 22px;
+    border-left: 3px solid var(--color-accent);
+    background: var(--color-sand-light);
   }
 
-  .legal-hero-inner {
-    width: min(1200px, 100%);
-    margin: 0 auto;
+  .legal-notice :global(.icon) {
+    flex: none;
+    margin-top: 3px;
+    color: var(--color-accent);
   }
 
-  .legal-hero p {
-    margin-bottom: 22px;
-
-    color: var(--beige);
-
-    font-size: 10px;
-    font-weight: 600;
-
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-  .legal-hero h1 {
+  .legal-content :global(h2) {
+    margin: 56px 0 16px;
     font-family: var(--font-display);
-
-    font-size: clamp(68px, 8vw, 120px);
+    font-size: var(--fs-display-s);
     font-weight: 400;
-
-    line-height: .85;
-
-    letter-spacing: -.04em;
+    line-height: 1.15;
   }
 
-  .legal-content {
-    padding:
-      clamp(90px, 10vw, 150px)
-      clamp(24px, 6vw, 110px);
-
-    background: var(--off-white);
-  }
-
-  .legal-inner {
-    width: min(900px, 100%);
-    margin: 0 auto;
-  }
-
-  .legal-inner :global(h2) {
-    margin:
-      70px
-      0
-      22px;
-
-    font-family: var(--font-display);
-
-    font-size: clamp(36px, 4vw, 52px);
-    font-weight: 400;
-
-    line-height: 1;
-  }
-
-  .legal-inner :global(h2:first-child) {
+  .legal-content :global(h2:first-of-type) {
     margin-top: 0;
   }
 
-  .legal-inner :global(h3) {
-    margin:
-      38px
-      0
-      14px;
-
-    font-size: 13px;
+  .legal-content :global(h3) {
+    margin: 32px 0 10px;
+    font-size: 1rem;
     font-weight: 600;
-
-    letter-spacing: .08em;
-    text-transform: uppercase;
   }
 
-  .legal-inner :global(p),
-  .legal-inner :global(li) {
-    color: #706b65;
-
-    font-size: 13px;
-    line-height: 1.95;
+  .legal-content :global(p),
+  .legal-content :global(li) {
+    color: var(--color-text-muted);
   }
 
-  .legal-inner :global(p + p) {
-    margin-top: 18px;
+  .legal-content :global(p + p) {
+    margin-top: 14px;
   }
 
-  .legal-inner :global(ul) {
-    margin:
-      20px
-      0
-      20px
-      20px;
+  .legal-content :global(ul) {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0 14px 1.25em;
   }
 
-  .legal-inner :global(a) {
-    color: #806b55;
-
+  .legal-content :global(a) {
+    color: var(--color-ink);
     text-decoration: underline;
-    text-underline-offset: 4px;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
   }
 
-  .placeholder {
-    padding: 20px 24px;
-
-    background: #e8ded1;
-
-    border-left: 3px solid #9b866f;
+  .legal-content :global(address) {
+    font-style: normal;
   }
 
-  @media (max-width: 600px) {
-    .legal-hero {
-      min-height: 360px;
-
-      padding:
-        145px
-        22px
-        60px;
-    }
-
-    .legal-content {
-      padding:
-        80px
-        22px;
-    }
+  .legal-updated {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-line);
+    font-size: var(--fs-small);
   }
 </style>

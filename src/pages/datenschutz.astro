@@ -1,141 +1,132 @@
 ---
 import LegalLayout from "../layouts/LegalLayout.astro";
+import Pending from "../components/ui/Pending.astro";
+import { site } from "../data/site";
+
+const { legal, contact } = site;
+
+const incomplete =
+  !legal.owner || !legal.street || !legal.postalCodeCity || !contact.email || !legal.hostingProvider;
 ---
 
 <LegalLayout
-  title="Datenschutz | Montageservice Finta"
-  description="Datenschutzerklärung von Montageservice Finta."
+  title="Datenschutzerklärung | Montageservice Finta"
+  description="Informationen zur Verarbeitung personenbezogener Daten auf der Website von Montageservice Finta."
   eyebrow="Datenschutz"
   heading="Datenschutzerklärung"
+  incomplete={incomplete}
+  updated="November 2026"
 >
-  <div class="notice">
-    <strong>Entwurf</strong>
-
-    <p>
-      Diese Seite wird vor Veröffentlichung noch an die
-      tatsächlich verwendeten Dienste, Hosting-Anbieter und
-      Kontaktdaten angepasst.
-    </p>
-  </div>
-
   <h2>1. Verantwortlicher</h2>
+  <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
+  <address>
+    <p>
+      {site.name}<br />
+      <Pending value={legal.owner} label="Vor- und Nachname des Inhabers" /><br />
+      <Pending value={legal.street} label="Straße und Hausnummer" /><br />
+      <Pending value={legal.postalCodeCity} label="PLZ und Ort" /><br />
+      E-Mail:{" "}
+      {contact.email ? <a href={`mailto:${contact.email}`}>{contact.email}</a> : <Pending value={null} label="E-Mail-Adresse" />}
+    </p>
+  </address>
 
+  <h2>2. Hosting und Server-Logfiles</h2>
   <p>
-    Verantwortlich für die Datenverarbeitung auf dieser Website:
+    Diese Website wird bei folgendem Anbieter gehostet:{" "}
+    <Pending value={legal.hostingProvider} label="Name und Anschrift des Hosting-Anbieters" />.
+    Mit dem Anbieter besteht ein Vertrag zur Auftragsverarbeitung gemäß
+    Art. 28 DSGVO bzw. wird ein solcher abgeschlossen.
+  </p>
+  <p>
+    Beim Aufruf der Website verarbeitet der Server technisch erforderliche
+    Daten, die Ihr Browser automatisch übermittelt. Dazu gehören insbesondere
+    IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Seite,
+    übertragene Datenmenge, Referrer-URL sowie Browsertyp und Betriebssystem.
+  </p>
+  <p>
+    Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO.
+    Unser berechtigtes Interesse liegt in der sicheren und stabilen
+    Bereitstellung der Website. Die Logfiles werden nach den Vorgaben des
+    Hosting-Anbieters gelöscht.
   </p>
 
+  <h2>3. Verschlüsselung</h2>
   <p>
-    Montageservice Finta<br />
-    [NAME]<br />
-    [ANSCHRIFT]<br />
-    [E-MAIL]<br />
-    [TELEFON]
+    Diese Website nutzt aus Sicherheitsgründen eine TLS-Verschlüsselung.
+    Eine verschlüsselte Verbindung erkennen Sie an „https://“ in der
+    Adresszeile Ihres Browsers.
   </p>
 
-  <h2>2. Hosting</h2>
-
+  <h2>4. Anfrageformular</h2>
   <p>
-    Diese Website wird bei einem externen Hosting-Anbieter
-    betrieben.
+    Wenn Sie uns über das Anfrageformular kontaktieren, verarbeiten wir die
+    von Ihnen angegebenen Daten, um Ihre Anfrage zu bearbeiten und mit Ihnen
+    Kontakt aufzunehmen. Dazu gehören:
+  </p>
+  <ul>
+    <li>gewünschte Leistung, Postleitzahl und Ort der Montage,</li>
+    <li>Ihre Projektbeschreibung,</li>
+    <li>Name, Telefonnummer, E-Mail-Adresse und bevorzugter Kontaktweg,</li>
+    <li>freiwillig hochgeladene Fotos.</li>
+  </ul>
+  <p>
+    Die Angaben werden per verschlüsselter E-Mail an uns übermittelt und
+    nicht in einer Datenbank auf dem Webserver gespeichert. Zum Schutz vor
+    Missbrauch wird die IP-Adresse für kurze Zeit in gekürzter, nicht
+    rückverfolgbarer Form (Hash) zwischengespeichert, um eine übermäßige
+    Anzahl automatisierter Anfragen zu begrenzen.
+  </p>
+  <p>
+    Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage auf
+    den Abschluss eines Vertrags gerichtet ist, im Übrigen Art. 6 Abs. 1
+    lit. f DSGVO (berechtigtes Interesse an der Beantwortung von Anfragen
+    sowie an der Abwehr von Spam). Ihre Daten werden gelöscht, sobald die
+    Anfrage abschließend bearbeitet ist und keine gesetzlichen
+    Aufbewahrungspflichten entgegenstehen.
+  </p>
+  <p>
+    Bitte laden Sie nur Fotos hoch, die für die Einschätzung Ihres Projekts
+    erforderlich sind, und achten Sie darauf, dass keine Personen erkennbar
+    sind.
   </p>
 
+  <h2>5. Cookies, Tracking und Schriftarten</h2>
   <p>
-    Die konkreten Angaben zum Hosting-Anbieter werden vor
-    Veröffentlichung ergänzt.
+    Diese Website setzt keine Cookies und verwendet keine Analyse-, Tracking-
+    oder Marketingdienste. Es werden keine Daten im lokalen Speicher Ihres
+    Browsers abgelegt.
   </p>
-
-  <h2>3. Server-Logfiles</h2>
-
   <p>
-    Beim Aufruf der Website können technisch erforderliche
-    Informationen durch den Hosting-Anbieter verarbeitet werden.
-    Dazu können beispielsweise IP-Adresse, Zeitpunkt des Zugriffs,
-    aufgerufene Seite und Browserinformationen gehören.
-  </p>
-
-  <h2>4. Kontakt- und Projektanfragen</h2>
-
-  <p>
-    Wenn Sie über das Anfrageformular Kontakt aufnehmen, werden
-    die von Ihnen angegebenen Daten verarbeitet, um Ihre Anfrage
-    zu bearbeiten und mit Ihnen Kontakt aufzunehmen.
-  </p>
-
-  <p>
-    Dazu können insbesondere Name, Telefonnummer, E-Mail-Adresse,
-    Ort, Projektbeschreibung und freiwillig hochgeladene Bilder
-    gehören.
-  </p>
-
-  <h2>5. Hochgeladene Dateien</h2>
-
-  <p>
-    Über das Projektformular können freiwillig Bilder zur besseren
-    Einschätzung des Projekts übermittelt werden.
-  </p>
-
-  <p>
-    Bitte laden Sie keine Bilder oder Dokumente hoch, die nicht
-    für die Bearbeitung Ihrer Anfrage erforderlich sind.
+    Die verwendeten Schriftarten sind lokal auf unserem Server eingebunden.
+    Beim Aufruf der Website wird keine Verbindung zu Servern Dritter (etwa
+    Google Fonts) hergestellt.
   </p>
 
   <h2>6. Instagram</h2>
-
   <p>
-    Diese Website enthält Links zum Instagram-Profil von
-    Montageservice Finta. Beim Anklicken eines solchen Links
-    verlassen Sie diese Website und gelangen zum Angebot von
-    Instagram.
+    Auf dieser Website befinden sich einfache Links zu unserem
+    Instagram-Profil. Es handelt sich nicht um eingebettete Inhalte; erst
+    wenn Sie einen Link anklicken, verlassen Sie unsere Website und gelangen
+    zum Angebot der Meta Platforms Ireland Ltd. Für die dortige
+    Datenverarbeitung gelten die Datenschutzhinweise von Instagram.
   </p>
 
-  <h2>7. Cookies und externe Dienste</h2>
-
+  <h2>7. Ihre Rechte</h2>
+  <p>Sie haben im Rahmen der gesetzlichen Bestimmungen jederzeit das Recht auf:</p>
+  <ul>
+    <li>Auskunft über Ihre gespeicherten Daten (Art. 15 DSGVO),</li>
+    <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO),</li>
+    <li>Löschung (Art. 17 DSGVO),</li>
+    <li>Einschränkung der Verarbeitung (Art. 18 DSGVO),</li>
+    <li>Datenübertragbarkeit (Art. 20 DSGVO),</li>
+    <li>
+      Widerspruch gegen die Verarbeitung auf Grundlage von Art. 6 Abs. 1
+      lit. f DSGVO (Art. 21 DSGVO).
+    </li>
+  </ul>
   <p>
-    Aktuell ist die Website so geplant, dass keine unnötigen
-    Tracking- oder Marketingdienste eingesetzt werden.
-  </p>
-
-  <p>
-    Falls später beispielsweise Google Analytics, Google Maps,
-    externe Schriftarten oder vergleichbare Dienste integriert
-    werden, muss diese Datenschutzerklärung entsprechend
-    erweitert werden.
-  </p>
-
-  <h2>8. Ihre Rechte</h2>
-
-  <p>
-    Die endgültigen Informationen zu Betroffenenrechten,
-    Aufbewahrungsfristen und Rechtsgrundlagen werden vor
-    Veröffentlichung anhand der tatsächlich eingesetzten
-    Dienste und Unternehmensdaten ergänzt.
-  </p>
-
-  <h2>9. Stand</h2>
-
-  <p>
-    Stand: Oktober 2026
+    Außerdem haben Sie das Recht, sich bei einer Datenschutz-Aufsichtsbehörde
+    zu beschweren (Art. 77 DSGVO), insbesondere in dem Bundesland Ihres
+    Wohnorts oder unseres Firmensitzes.
   </p>
 </LegalLayout>
-
-<style>
-  .notice {
-    margin-bottom: 60px;
-
-    padding: 24px 28px;
-
-    background: #e8ded1;
-
-    border-left: 3px solid #927d65;
-  }
-
-  .notice strong {
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-</style>

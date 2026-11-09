@@ -8,7 +8,11 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && node scripts/copy-backend.mjs",
-    "preview": "astro preview",
+    "preview": "npm run build && php -S localhost:8080 -t dist router.php",
+    "check": "astro check",
+    "verify": "node scripts/verify-dist.mjs",
+    "test:php": "php backend/tests/validation-test.php",
+    "test": "npm run check && npm run build && npm run verify && npm run test:php",
     "astro": "astro"
   },
   "dependencies": {

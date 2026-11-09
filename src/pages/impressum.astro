@@ -1,78 +1,82 @@
 ---
 import LegalLayout from "../layouts/LegalLayout.astro";
+import Pending from "../components/ui/Pending.astro";
+import { site, telHref } from "../data/site";
+
+const { legal, contact } = site;
+
+const incomplete =
+  !legal.owner || !legal.street || !legal.postalCodeCity || (!contact.phone && !contact.email);
 ---
 
 <LegalLayout
   title="Impressum | Montageservice Finta"
-  description="Impressum von Montageservice Finta."
+  description="Impressum und Anbieterkennzeichnung von Montageservice Finta."
   eyebrow="Rechtliches"
   heading="Impressum"
+  incomplete={incomplete}
+  updated="November 2026"
 >
-  <div class="notice">
-    <strong>Noch zu ergänzen</strong>
-
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <address>
     <p>
-      Die endgültigen Unternehmens- und Kontaktdaten werden
-      vor Veröffentlichung der Website eingetragen.
+      {site.name}<br />
+      Inhaber: <Pending value={legal.owner} label="Vor- und Nachname des Inhabers" /><br />
+      <Pending value={legal.street} label="Straße und Hausnummer" /><br />
+      <Pending value={legal.postalCodeCity} label="PLZ und Ort" /><br />
+      Deutschland
     </p>
-  </div>
-
-  <h2>Angaben zum Unternehmen</h2>
-
-  <p>
-    Montageservice Finta<br />
-    [VOLLSTÄNDIGER NAME DES INHABERS]<br />
-    [STRASSE UND HAUSNUMMER]<br />
-    [PLZ UND ORT]<br />
-    Deutschland
-  </p>
+  </address>
 
   <h2>Kontakt</h2>
-
   <p>
-    Telefon: [TELEFONNUMMER]<br />
-    E-Mail: [E-MAIL-ADRESSE]
+    Telefon:{" "}
+    {
+      contact.phone ? (
+        <a href={telHref(contact.phone)}>{contact.phone}</a>
+      ) : (
+        <Pending value={null} label="Telefonnummer" />
+      )
+    }
+    <br />
+    E-Mail:{" "}
+    {
+      contact.email ? (
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      ) : (
+        <Pending value={null} label="E-Mail-Adresse" />
+      )
+    }
   </p>
 
-  <h2>Unternehmensangaben</h2>
+  {
+    legal.vatId && (
+      <>
+        <h2>Umsatzsteuer-ID</h2>
+        <p>Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: {legal.vatId}</p>
+      </>
+    )
+  }
 
+  <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
   <p>
-    [GEWERBE-/UNTERNEHMENSANGABEN FALLS ERFORDERLICH]
+    <Pending value={legal.owner} label="Vor- und Nachname" /><br />
+    Anschrift wie oben
   </p>
 
-  <h2>Umsatzsteuer</h2>
-
+  <h2>Haftung für Links</h2>
   <p>
-    [UMSATZSTEUER-ID ODER ENTSPRECHENDE ANGABE,
-    FALLS VORHANDEN]
+    Diese Website enthält Links zu externen Websites Dritter (z. B. Instagram),
+    auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten
+    Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich.
+    Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links
+    umgehend entfernen.
   </p>
 
-  <h2>Verantwortlich für den Inhalt</h2>
-
+  <h2>Urheberrecht</h2>
   <p>
-    [NAME]<br />
-    [ANSCHRIFT]
+    Die auf dieser Website veröffentlichten Inhalte und Fotos unterliegen dem
+    deutschen Urheberrecht. Eine Verwendung außerhalb der Grenzen des
+    Urheberrechts bedarf der vorherigen schriftlichen Zustimmung.
   </p>
 </LegalLayout>
-
-<style>
-  .notice {
-    margin-bottom: 60px;
-
-    padding: 24px 28px;
-
-    background: #e8ded1;
-
-    border-left: 3px solid #927d65;
-  }
-
-  .notice strong {
-    display: block;
-
-    margin-bottom: 8px;
-
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-</style>

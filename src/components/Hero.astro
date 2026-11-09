@@ -1,422 +1,194 @@
-<section class="hero">
-  <div class="hero-background">
-    <div class="hero-image"></div>
+---
+import { Picture } from "astro:assets";
+import Icon from "./ui/Icon.astro";
+import { images } from "../data/site";
+---
+
+<section class="hero surface-dark on-dark" aria-labelledby="hero-title">
+  <div class="hero-media" aria-hidden="true">
+    <Picture
+      src={images.hero}
+      alt=""
+      formats={["avif", "webp"]}
+      widths={[640, 960, 1280, 1600, 2048]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="hero-image"
+    />
   </div>
 
-  <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span></span>
-      Küchen · Möbel · Türen
-    </div>
-
-    <h1>
-      Präzision,<br />
-      <em>die man sieht.</em>
+  <div class="container hero-content">
+    <h1 class="hero-kicker" id="hero-title">
+      Küchenmontage · Möbelmontage · Türen &amp; Zargen
     </h1>
 
+    <p class="display-xl hero-claim">
+      Präzision,<br />
+      <em>die man sieht.</em>
+    </p>
+
     <div class="hero-bottom">
-      <p>
-        Professionelle Montage mit einem Auge fürs Detail.
-        Sauber ausgeführt, zuverlässig umgesetzt.
+      <p class="lead">
+        Montageservice Finta montiert Küchen, Möbel, Türen und Zargen mit
+        einem genauen Blick fürs Detail – sauber ausgeführt und zuverlässig
+        umgesetzt.
       </p>
 
-      <a href="#kontakt" class="hero-button">
-        <span>Projekt anfragen</span>
-
-        <span class="arrow">
-          ↗
-        </span>
-      </a>
+      <div class="hero-actions">
+        <a href="/anfrage" class="btn btn--sand">
+          Montage anfragen
+          <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
+        </a>
+        <a href="#leistungen" class="text-link">
+          Leistungen ansehen
+          <Icon name="arrow-down" size={16} />
+        </a>
+      </div>
     </div>
-  </div>
 
-  <div class="hero-index">
-    <span>01</span>
-    <span class="line"></span>
-    <span>Montageservice Finta</span>
-  </div>
-
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-
-    <div class="scroll-line">
-      <div></div>
-    </div>
+    <ul class="hero-facts" aria-label="Ihre Vorteile">
+      <li><Icon name="check" size={16} /> Unverbindliche Anfrage</li>
+      <li><Icon name="check" size={16} /> Fotos direkt mitsenden</li>
+      <li><Icon name="check" size={16} /> Persönliche Rückmeldung</li>
+    </ul>
   </div>
 </section>
-
-<script>
-  const heroImage = document.querySelector(".hero-image");
-
-  if (heroImage) {
-    let ticking = false;
-
-    const updateHero = () => {
-      if (window.innerWidth <= 900) {
-        heroImage.style.setProperty(
-          "--hero-shift",
-          "0px"
-        );
-
-        ticking = false;
-        return;
-      }
-
-      const scrollY = window.scrollY;
-      const shift = Math.min(scrollY * 0.16, 110);
-
-      heroImage.style.setProperty(
-        "--hero-shift",
-        `${shift}px`
-      );
-
-      ticking = false;
-    };
-
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!ticking) {
-          window.requestAnimationFrame(updateHero);
-          ticking = true;
-        }
-      },
-      { passive: true }
-    );
-  }
-</script>
 
 <style>
   .hero {
     position: relative;
-
+    isolation: isolate;
     min-height: 100svh;
-    width: 100%;
-
     display: flex;
     align-items: flex-end;
-
     overflow: hidden;
-
-    background: var(--anthracite-dark);
-    color: white;
   }
 
-  .hero-background {
+  .hero-media {
     position: absolute;
+    z-index: -1;
     inset: 0;
-
-    overflow: hidden;
-
     background: #25231f;
   }
 
-  .hero-image {
-    position: absolute;
-
-    inset: -6% 0;
-
-    background:
-      linear-gradient(
-        90deg,
-        rgba(15, 15, 14, 0.9) 0%,
-        rgba(15, 15, 14, 0.63) 42%,
-        rgba(15, 15, 14, 0.25) 100%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(10, 10, 9, 0.06) 45%,
-        rgba(10, 10, 9, 0.58) 100%
-      ),
-      url("/images/hero.jpeg") center / cover no-repeat;
-
-    transform:
-      translateY(var(--hero-shift, 0px))
-      scale(1.06);
-
-    animation:
-      heroImageReveal 1.8s
-      cubic-bezier(0.2, 0.65, 0.3, 1)
-      forwards;
-
-    will-change: transform;
-  }
-
-  .hero-background::after {
+  .hero-media::after {
     content: "";
-
     position: absolute;
     inset: 0;
+    background:
+      linear-gradient(90deg, rgb(15 15 14 / 0.88) 0%, rgb(15 15 14 / 0.6) 45%, rgb(15 15 14 / 0.25) 100%),
+      linear-gradient(180deg, rgb(15 15 14 / 0.35) 0%, rgb(15 15 14 / 0) 30%, rgb(15 15 14 / 0.7) 100%);
+  }
 
-    opacity: 0.11;
-
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='.35'/%3E%3C/svg%3E");
+  .hero-media :global(.hero-image) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% center;
+    animation: hero-zoom 1.8s var(--ease-out) both;
   }
 
   .hero-content {
-    position: relative;
-    z-index: 2;
-
-    width: min(1450px, calc(100% - 12vw));
-
-    margin: 0 auto;
-    padding-bottom: clamp(90px, 10vh, 140px);
+    padding-top: calc(var(--header-height) + 48px);
+    padding-bottom: clamp(56px, 9vh, 112px);
   }
 
-  .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-
-    margin-bottom: 32px;
-
-    color: var(--beige);
-
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  .hero-eyebrow > span {
-    width: 45px;
-    height: 1px;
-
-    background: var(--beige);
-  }
-
-  h1 {
-    max-width: 1100px;
-
-    font-family: var(--font-display);
-    font-size: clamp(73px, 9vw, 150px);
-    font-weight: 400;
-    line-height: 0.79;
-    letter-spacing: -0.045em;
-  }
-
-  h1 em {
-    color: var(--beige);
-
-    font-weight: 400;
-  }
-
-  .hero-bottom {
-    width: min(900px, 100%);
-
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 60px;
-
-    margin-top: 65px;
-  }
-
-  .hero-bottom p {
-    max-width: 420px;
-
-    color: rgba(255, 255, 255, 0.7);
-
-    font-size: 14px;
-    line-height: 1.8;
-  }
-
-  .hero-button {
-    min-width: 225px;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 30px;
-
-    padding: 19px 20px 19px 25px;
-
-    background: var(--beige);
-    color: var(--anthracite-dark);
-
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-
-    transition: background 0.3s ease;
-  }
-
-  .hero-button:hover {
-    background: var(--off-white);
-  }
-
-  .arrow {
-    width: 35px;
-    height: 35px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid rgba(20, 20, 19, 0.25);
-
-    font-size: 15px;
-  }
-
-  .hero-index {
-    position: absolute;
-    z-index: 2;
-    left: clamp(24px, 3vw, 52px);
-    bottom: 40px;
-
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    color: rgba(255, 255, 255, 0.38);
-
-    font-size: 9px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .hero-index .line {
-    width: 24px;
-    height: 1px;
-
-    background: rgba(255, 255, 255, 0.3);
-  }
-
-  .scroll-indicator {
-    position: absolute;
-    right: clamp(24px, 3vw, 52px);
-    bottom: 38px;
-    z-index: 2;
-
+  .hero-kicker {
     display: flex;
     align-items: center;
     gap: 14px;
-
-    color: rgba(255, 255, 255, 0.45);
-
-    font-size: 9px;
-    letter-spacing: 0.15em;
+    margin-bottom: 28px;
+    color: var(--color-sand);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
   }
 
-  .scroll-line {
-    width: 55px;
+  .hero-kicker::before {
+    content: "";
+    flex: none;
+    width: 40px;
     height: 1px;
-
-    overflow: hidden;
-
-    background: rgba(255, 255, 255, 0.2);
+    background: currentColor;
   }
 
-  .scroll-line div {
-    width: 45%;
-    height: 100%;
-
-    background: var(--beige);
+  .hero-claim {
+    max-width: 11ch;
   }
 
-  @media (max-width: 900px) {
-    .hero {
-      min-height: 100svh;
-      align-items: flex-end;
-    }
-
-    .hero-image {
-      inset: 0;
-      transform: scale(1.04) !important;
-
-      background-position: 62% center;
-    }
-
-    .hero-content {
-      width: calc(100% - 44px);
-
-      margin: 0 auto;
-
-      padding-top: 150px;
-      padding-bottom: 95px;
-    }
-
-    .hero-eyebrow {
-      margin-bottom: 24px;
-
-      font-size: 8px;
-      letter-spacing: 0.18em;
-    }
-
-    .hero-eyebrow > span {
-      width: 30px;
-    }
-
-    h1 {
-      max-width: 100%;
-
-      font-size: clamp(60px, 18vw, 92px);
-
-      line-height: 0.82;
-
-      letter-spacing: -0.045em;
-    }
-
-    .hero-bottom {
-      width: 100%;
-
-      flex-direction: column;
-      align-items: stretch;
-
-      gap: 32px;
-
-      margin-top: 40px;
-    }
-
-    .hero-bottom p {
-      max-width: 330px;
-
-      font-size: 12px;
-      line-height: 1.8;
-    }
-
-    .hero-button {
-      width: 100%;
-      min-width: 0;
-
-      padding:
-        17px
-        17px
-        17px
-        22px;
-    }
-
-    .hero-index,
-    .scroll-indicator {
-      display: none;
-    }
+  .hero-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px 64px;
+    max-width: 980px;
+    margin-top: clamp(36px, 5vw, 64px);
   }
 
-  @media (max-width: 380px) {
-    .hero-content {
-      width: calc(100% - 32px);
-    }
-
-    h1 {
-      font-size: clamp(54px, 17vw, 72px);
-    }
+  .hero-bottom .lead {
+    max-width: 30em;
   }
 
-  @keyframes heroImageReveal {
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 32px;
+  }
+
+  .hero-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 32px;
+    margin-top: clamp(40px, 6vw, 72px);
+    padding-top: 24px;
+    border-top: 1px solid var(--color-on-dark-line);
+    list-style: none;
+    color: var(--color-on-dark-muted);
+    font-size: var(--fs-small);
+  }
+
+  .hero-facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-facts :global(.icon) {
+    color: var(--color-sand);
+  }
+
+  @keyframes hero-zoom {
     from {
       opacity: 0;
-      transform:
-        translateY(var(--hero-shift, 0px))
-        scale(1.12);
+      transform: scale(1.06);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-media :global(.hero-image) {
+      object-position: 62% center;
     }
 
-    to {
-      opacity: 1;
-      transform:
-        translateY(var(--hero-shift, 0px))
-        scale(1.06);
+    .hero-media::after {
+      background: linear-gradient(180deg, rgb(15 15 14 / 0.55) 0%, rgb(15 15 14 / 0.55) 40%, rgb(15 15 14 / 0.88) 100%);
+    }
+
+    .hero-actions {
+      width: 100%;
+    }
+
+    .hero-actions .btn {
+      width: 100%;
+    }
+
+    .hero-facts {
+      flex-direction: column;
     }
   }
 </style>

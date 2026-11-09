@@ -1,363 +1,209 @@
-<section class="services" id="leistungen">
-  <div class="services-header" data-reveal>
-    <div>
-      <p class="eyebrow">Unsere Leistungen</p>
+---
+import { Picture } from "astro:assets";
+import Icon from "./ui/Icon.astro";
+import { services } from "../data/site";
+---
 
-      <h2>
-        Präzise Arbeit.<br />
-        <em>Bis ins Detail.</em>
-      </h2>
+<section class="section surface-sand" id="leistungen" aria-labelledby="leistungen-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Leistungen</p>
+        <h2 class="display-l" id="leistungen-title">
+          Präzise Arbeit.<br />
+          <em>Bis ins Detail.</em>
+        </h2>
+      </div>
+      <p class="lead">
+        Von der Küche bis zur Innentür: Wir übernehmen Ihre Montage
+        zuverlässig, sauber und mit hohem Anspruch an das Ergebnis.
+      </p>
     </div>
 
-    <p class="services-description">
-      Von der Küche bis zur Innentür – wir übernehmen
-      Montagearbeiten zuverlässig, sauber und mit höchstem
-      Anspruch an das Ergebnis.
+    <ul class="service-list">
+      {
+        services.map((service, index) => (
+          <li class="service-card" data-reveal data-reveal-delay={index + 1}>
+            <Picture
+              src={service.image}
+              alt={service.alt}
+              formats={["avif", "webp"]}
+              widths={[400, 640, 900]}
+              sizes="(min-width: 1024px) 30vw, (min-width: 700px) 50vw, 100vw"
+              class="service-image"
+            />
+
+            <div class="service-body">
+              <span class="service-index" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")} — {service.short}
+              </span>
+
+              <h3 class="display-m">
+                <a href={`/anfrage?leistung=${service.slug}`} class="service-link">
+                  {service.title}
+                </a>
+              </h3>
+
+              <p>{service.description}</p>
+
+              <span class="service-cta" aria-hidden="true">
+                Jetzt anfragen
+                <Icon name="arrow-up-right" size={16} />
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="service-note" data-reveal>
+      Ihr Vorhaben ist nicht dabei?
+      <a href="/anfrage?leistung=sonstiges" class="text-link">
+        Beschreiben Sie es uns
+        <Icon name="arrow-right" size={16} />
+      </a>
     </p>
-  </div>
-
-  <div class="service-list">
-
-    <article class="service-card kitchen" data-reveal data-reveal-delay="1" >
-      <div class="service-image"></div>
-      <div class="service-overlay"></div>
-      <div class="service-overlay"></div>
-
-      <div class="service-top">
-        <span>01</span>
-        <span>Küchen</span>
-      </div>
-
-      <div class="service-content">
-        <h3>Küchenmontage</h3>
-
-        <p>
-          Fachgerechte und präzise Montage für Küchen,
-          die bis ins kleinste Detail passen.
-        </p>
-
-        <span class="service-arrow">↗</span>
-      </div>
-    </article>
-
-    <article class="service-card furniture" data-reveal data-reveal-delay="2" >
-      <div class="service-image"></div>
-      <div class="service-overlay"></div>
-      <div class="service-overlay"></div>
-
-      <div class="service-top">
-        <span>02</span>
-        <span>Möbel</span>
-      </div>
-
-      <div class="service-content">
-        <h3>Möbelmontage</h3>
-
-        <p>
-          Vom einzelnen Möbelstück bis zur kompletten
-          Einrichtung – sauber und zuverlässig montiert.
-        </p>
-
-        <span class="service-arrow">↗</span>
-      </div>
-    </article>
-
-    <article class="service-card doors" data-reveal data-reveal-delay="3" >
-      <div class="service-image"></div>
-      <div class="service-overlay"></div>
-      <div class="service-overlay"></div>
-
-      <div class="service-top">
-        <span>03</span>
-        <span>Türen</span>
-      </div>
-
-      <div class="service-content">
-        <h3>Türen & Zargen</h3>
-
-        <p>
-          Präzise Montage von Türen und Zargen für ein
-          langlebiges und hochwertiges Ergebnis.
-        </p>
-
-        <span class="service-arrow">↗</span>
-      </div>
-    </article>
-
   </div>
 </section>
 
 <style>
-  .services {
-    padding:
-      clamp(90px, 10vw, 160px)
-      clamp(24px, 6vw, 110px);
-
-    background: #e8ded1;
-  }
-
-  .services-header {
-    width: min(1350px, 100%);
-    margin: 0 auto clamp(70px, 7vw, 110px);
-
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 60px;
-  }
-
-  .eyebrow {
-    margin-bottom: 25px;
-
-    color: #8a7660;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(55px, 6vw, 92px);
-    font-weight: 400;
-    line-height: 0.92;
-    letter-spacing: -0.035em;
-  }
-
-  h2 em {
-    color: #99836b;
-    font-weight: 400;
-  }
-
-  .services-description {
-    max-width: 390px;
-
-    color: #777069;
-
-    font-size: 13px;
-    line-height: 1.85;
-  }
-
   .service-list {
-    width: min(1350px, 100%);
-    margin: 0 auto;
-
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    list-style: none;
   }
 
   .service-card {
     position: relative;
-
-    min-height: 640px;
-
+    isolation: isolate;
+    min-height: clamp(500px, 48vw, 640px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-
-    padding: 30px;
-
+    justify-content: flex-end;
     overflow: hidden;
-
-    color: white;
-
-    cursor: pointer;
-
-    box-shadow:
-      0 20px 60px
-      rgba(32, 32, 30, 0.06);
+    border-radius: var(--radius);
+    background: #37332f;
+    color: var(--color-white);
+    box-shadow: var(--shadow-soft);
   }
 
-  .kitchen {
-    --service-image: url("/images/kuechenmontage.jpeg");
-    background-color: #37332f;
-  }
-
-  .furniture {
-    --service-image: url("/images/mobelmontage.jpeg");
-    background-color: #4b443c;
-  }
-
-  .doors {
-    --service-image: url("/images/tuermontage.jpeg");
-    background-color: #302d29;
-  }
-
-  .service-image {
+  .service-card :global(.service-image) {
     position: absolute;
-
+    z-index: -2;
     inset: 0;
-
-    background-image: var(--service-image);
-    background-size: cover;
-    background-position: center;
-
-    transform: scale(1);
-
-    transition:
-      transform 1.1s
-      cubic-bezier(0.2, 0.65, 0.3, 1);
-
-    will-change: transform;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.1s var(--ease-out);
   }
 
-  .service-card:hover .service-image {
-    transform: scale(1.065);
-  }
-
-  .service-overlay {
+  .service-card::before {
+    content: "";
     position: absolute;
+    z-index: -1;
     inset: 0;
-
-    z-index: 1;
-
-    background:
-      linear-gradient(
-        180deg,
-        rgba(15, 15, 14, 0.08) 10%,
-        rgba(15, 15, 14, 0.18) 45%,
-        rgba(15, 15, 14, 0.8) 100%
-      );
-
-    transition: background 0.45s ease;
+    background: linear-gradient(180deg, rgb(15 15 14 / 0.05) 25%, rgb(15 15 14 / 0.55) 55%, rgb(15 15 14 / 0.9) 100%);
   }
 
-  .service-card:hover .service-overlay {
-    background:
-      linear-gradient(
-        180deg,
-        rgba(15, 15, 14, 0.15),
-        rgba(15, 15, 14, 0.82)
-      );
+  .service-card:hover :global(.service-image) {
+    transform: scale(1.05);
   }
 
-  .service-top,
-  .service-content {
-    position: relative;
-    z-index: 2;
+  .service-body {
+    padding: clamp(22px, 2.4vw, 32px);
   }
 
-  .service-top {
-    display: flex;
-    justify-content: space-between;
-
-    font-size: 9px;
-    letter-spacing: 0.17em;
+  .service-index {
+    display: block;
+    margin-bottom: 14px;
+    color: var(--color-sand);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
-
-    color: rgba(255, 255, 255, 0.7);
   }
 
-  .service-content {
-    position: relative;
-
-    padding-right: 55px;
+  .service-body h3 {
+    margin-bottom: 14px;
   }
 
-  .service-content h3 {
-    margin-bottom: 22px;
-
-    font-family: var(--font-display);
-    font-size: clamp(40px, 4vw, 60px);
-    font-weight: 400;
-    line-height: 1;
-  }
-
-  .service-content p {
-    max-width: 310px;
-
-    color: rgba(255, 255, 255, 0.68);
-
-    font-size: 12px;
-    line-height: 1.75;
-  }
-
-  .service-arrow {
+  .service-link::after {
+    /* gesamte Karte klickbar, Link-Text bleibt der zugängliche Name */
+    content: "";
     position: absolute;
-    right: 0;
-    bottom: 0;
+    inset: 0;
+  }
 
-    width: 44px;
-    height: 44px;
+  .service-link:focus-visible {
+    outline: none;
+  }
 
-    display: flex;
+  .service-card:has(.service-link:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  .service-body p {
+    max-width: 34ch;
+    color: rgb(255 255 255 / 0.82);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .service-cta {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-
-    border: 1px solid rgba(255, 255, 255, 0.4);
-
+    gap: 10px;
+    margin-top: 22px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgb(255 255 255 / 0.35);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     transition:
-      background 0.3s ease,
-      color 0.3s ease,
-      transform 0.3s ease;
+      border-color var(--duration) ease,
+      gap var(--duration) var(--ease-out);
   }
 
-  .service-card:hover .service-arrow {
-    background: var(--beige);
-    color: var(--anthracite);
-    transform: rotate(45deg);
+  .service-card:hover .service-cta {
+    gap: 16px;
+    border-color: var(--color-sand);
   }
 
-  @media (max-width: 1000px) {
-    .services-header {
-      align-items: flex-start;
-      flex-direction: column;
+  .service-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 20px;
+    margin-top: 40px;
+    color: var(--color-text-muted);
+  }
+
+  .service-note .text-link {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 1023.98px) {
+    .service-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .service-card:last-child {
+      grid-column: 1 / -1;
+      min-height: 460px;
+    }
+  }
+
+  @media (max-width: 699.98px) {
     .service-list {
       grid-template-columns: 1fr;
     }
 
-    .service-card {
-      min-height: 520px;
-    }
-  }
-
-  @media (max-width: 700px) {
-    .services {
-      padding:
-        85px
-        20px;
-    }
-
-    .services-header {
-      gap: 35px;
-
-      margin-bottom: 55px;
-    }
-
-    h2 {
-      font-size: clamp(50px, 14vw, 72px);
-    }
-
-    .services-description {
-      max-width: 100%;
-    }
-
-    .service-list {
-      grid-template-columns: 1fr;
-
-      gap: 12px;
-    }
-
-    .service-card {
-      min-height: 470px;
-
-      padding: 22px;
-    }
-
-    .service-content {
-      padding-right: 55px;
-    }
-
-    .service-content h3 {
-      font-size: clamp(40px, 12vw, 55px);
-    }
-
-    .service-content p {
-      font-size: 11px;
+    .service-card,
+    .service-card:last-child {
+      min-height: 440px;
     }
   }
 </style>

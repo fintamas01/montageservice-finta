@@ -1,19 +1,163 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
+import PageHero from "../components/PageHero.astro";
 import RequestForm from "../components/RequestForm.astro";
-import Footer from "../components/Footer.astro";
+import Icon from "../components/ui/Icon.astro";
+import { site, telHref } from "../data/site";
+
+const nextSteps = [
+  "Wir prüfen Ihre Angaben und Fotos.",
+  "Wir melden uns persönlich bei Ihnen.",
+  "Gemeinsam stimmen wir Umfang und Termin ab.",
+];
 ---
 
 <Layout
-  title="Projekt anfragen | Montageservice Finta"
-  description="Senden Sie Ihre unverbindliche Anfrage für Küchen-, Möbel- oder Türmontage an Montageservice Finta."
+  title="Montage anfragen | Montageservice Finta"
+  description="Senden Sie Ihre unverbindliche Anfrage für Küchenmontage, Möbelmontage oder die Montage von Türen und Zargen – gerne mit Fotos Ihres Projekts."
 >
-  <Header />
+  <PageHero
+    eyebrow="Projektanfrage"
+    title="Erzählen Sie uns"
+    accent="von Ihrem Vorhaben."
+    lead="Je genauer Ihre Angaben, desto besser können wir Ihr Projekt einschätzen. Fotos können Sie direkt mitsenden – die Anfrage ist unverbindlich."
+  />
 
-  <main>
-    <RequestForm />
-  </main>
+  <section class="section surface-paper request-section">
+    <div class="container request-layout">
+      <aside class="request-aside" aria-labelledby="next-steps-title">
+        <div class="aside-card">
+          <h2 class="aside-title" id="next-steps-title">So geht es weiter</h2>
+          <ol class="aside-steps">
+            {
+              nextSteps.map((step, index) => (
+                <li>
+                  <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                  {step}
+                </li>
+              ))
+            }
+          </ol>
 
-  <Footer />
+          <div class="aside-contact">
+            <p>Lieber direkt Kontakt aufnehmen?</p>
+            {
+              site.contact.phone && (
+                <a href={telHref(site.contact.phone)}>
+                  <Icon name="phone" size={16} />
+                  {site.contact.phone}
+                </a>
+              )
+            }
+            {
+              site.contact.email && (
+                <a href={`mailto:${site.contact.email}`}>
+                  <Icon name="mail" size={16} />
+                  {site.contact.email}
+                </a>
+              )
+            }
+            <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">
+              <Icon name="instagram" size={16} />
+              {site.instagram.handle}
+              <span class="sr-only">(öffnet in neuem Tab)</span>
+            </a>
+          </div>
+        </div>
+      </aside>
+
+      <RequestForm />
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .request-section {
+    padding-top: clamp(56px, 7vw, 104px);
+  }
+
+  .request-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+    align-items: start;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  .request-aside {
+    position: sticky;
+    top: calc(var(--header-height-compact) + 32px);
+  }
+
+  .aside-card {
+    padding: 28px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    background: var(--color-white);
+  }
+
+  .aside-title {
+    margin-bottom: 20px;
+    font-family: var(--font-display);
+    font-size: var(--fs-display-s);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .aside-steps {
+    display: grid;
+    gap: 14px;
+    list-style: none;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .aside-steps li {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+  }
+
+  .aside-steps span {
+    padding-top: 2px;
+    color: var(--color-accent);
+    font-size: var(--fs-label);
+    font-weight: 600;
+  }
+
+  .aside-contact {
+    display: grid;
+    gap: 2px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-line);
+    font-size: var(--fs-small);
+  }
+
+  .aside-contact p {
+    margin-bottom: 6px;
+    color: var(--color-text-muted);
+  }
+
+  .aside-contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .aside-contact a:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 959.98px) {
+    .request-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .request-aside {
+      position: static;
+      order: 2;
+    }
+  }
+</style>

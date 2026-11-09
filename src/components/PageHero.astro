@@ -1,0 +1,39 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Zweite Zeile, wird kursiv im Akzentton gesetzt. */
+  accent?: string;
+  lead?: string;
+  size?: "default" | "compact";
+}
+
+const { eyebrow, title, accent, lead, size = "default" } = Astro.props;
+---
+
+<section class:list={["page-hero surface-dark on-dark", `page-hero--${size}`]}>
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 class="display-l">
+      {title}
+      {accent && (<><br /><em>{accent}</em></>)}
+    </h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-top: calc(var(--header-height) + clamp(56px, 8vw, 112px));
+    padding-bottom: clamp(56px, 7vw, 104px);
+  }
+
+  .page-hero--compact h1 {
+    font-size: var(--fs-display-m);
+  }
+
+  .page-hero .lead {
+    margin-top: clamp(24px, 3vw, 40px);
+  }
+</style>
