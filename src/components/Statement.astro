@@ -1,154 +1,74 @@
-<section class="statement">
-  <div class="statement-inner" data-reveal>
+<section class="section statement surface-dark on-dark" aria-labelledby="anspruch-title">
+  <div class="container statement-inner" data-reveal>
+    <p class="eyebrow">Unser Anspruch</p>
 
-    <div class="statement-small">
-      <span></span>
-      Unser Anspruch
-    </div>
-
-    <h2>
-      Gute Montage
-      <em>fällt nicht auf.</em>
+    <h2 class="display-l" id="anspruch-title">
+      Gute Montage <em>fällt nicht auf.</em><br />
       Sie passt einfach.
     </h2>
 
-    <div class="statement-footer">
-      <span>Präzise</span>
-      <i></i>
-      <span>Sauber</span>
-      <i></i>
-      <span>Zuverlässig</span>
-    </div>
-
+    <ul class="statement-values">
+      <li>Präzise</li>
+      <li>Sauber</li>
+      <li>Zuverlässig</li>
+    </ul>
   </div>
 </section>
 
 <style>
   .statement {
     position: relative;
-
-    padding: clamp(120px, 14vw, 230px) 24px;
-
     overflow: hidden;
-
-    background: var(--anthracite-dark);
-    color: white;
+    text-align: center;
   }
 
   .statement::after {
     content: "";
-
     position: absolute;
-    width: 650px;
-    height: 650px;
-
-    right: -280px;
-    top: -270px;
-
+    top: -260px;
+    right: -260px;
+    width: 620px;
+    height: 620px;
+    border: 1px solid rgb(205 187 165 / 0.12);
     border-radius: 50%;
-
-    background: rgba(205, 187, 165, 0.07);
-
-    filter: blur(2px);
+    pointer-events: none;
   }
 
   .statement-inner {
     position: relative;
-    z-index: 2;
-
-    max-width: 1200px;
-    margin: 0 auto;
-
-    text-align: center;
+    z-index: 1;
+    max-width: 1040px;
   }
 
-  .statement-small {
+  .statement .eyebrow {
+    margin-bottom: 36px;
+  }
+
+  .statement-values {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 14px;
-
-    margin-bottom: 50px;
-
-    color: var(--beige);
-
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  .statement-small span {
-    width: 32px;
-    height: 1px;
-    background: var(--beige);
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(60px, 8vw, 125px);
-    font-weight: 400;
-    line-height: 0.87;
-    letter-spacing: -0.04em;
-  }
-
-  h2 em {
-    display: block;
-
-    color: var(--beige);
-
-    font-weight: 400;
-  }
-
-  .statement-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 22px;
-
-    margin-top: 70px;
-
-    color: rgba(255, 255, 255, 0.52);
-
-    font-size: 9px;
+    gap: 12px 28px;
+    margin-top: clamp(40px, 5vw, 64px);
+    list-style: none;
+    color: var(--color-on-dark-muted);
+    font-size: var(--fs-label);
+    font-weight: 600;
     letter-spacing: 0.22em;
     text-transform: uppercase;
   }
 
-  .statement-footer i {
-    width: 3px;
-    height: 3px;
-
-    border-radius: 50%;
-
-    background: var(--beige);
+  .statement-values li {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
   }
 
-  @media (max-width: 600px) {
-    .statement {
-      padding:
-        110px
-        20px;
-    }
-
-    .statement-small {
-      margin-bottom: 35px;
-    }
-
-    h2 {
-      font-size: clamp(52px, 15vw, 78px);
-
-      line-height: 0.9;
-    }
-
-    .statement-footer {
-      flex-wrap: wrap;
-
-      gap: 10px 15px;
-
-      margin-top: 50px;
-
-      font-size: 7px;
-    }
+  .statement-values li + li::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-sand);
   }
 </style>

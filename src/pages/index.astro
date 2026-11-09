@@ -1,36 +1,58 @@
 ---
 import Layout from "../layouts/Layout.astro";
-
-import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
-import Intro from "../components/Intro.astro";
 import Services from "../components/Services.astro";
 import Statement from "../components/Statement.astro";
 import Portfolio from "../components/Portfolio.astro";
 import Process from "../components/Process.astro";
 import About from "../components/About.astro";
-import Instagram from "../components/Instagram.astro";
 import ContactCTA from "../components/ContactCTA.astro";
-import Footer from "../components/Footer.astro";
+import { getImage } from "astro:assets";
+import { images, services, site } from "../data/site";
+
+const businessImage = await getImage({ src: images.hero, width: 1600, format: "jpg" });
+
+// Nur verifizierte Angaben – Adresse, Telefon, Öffnungszeiten etc. erst
+// ergänzen, wenn sie vom Inhaber bestätigt wurden (src/data/site.ts).
+const business: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  "@id": `${site.url}/#business`,
+  name: site.name,
+  url: `${site.url}/`,
+  description: site.description,
+  image: new URL(businessImage.src, site.url).toString(),
+  sameAs: [site.instagram.url],
+  makesOffer: services.map((service) => ({
+    "@type": "Offer",
+    itemOffered: { "@type": "Service", name: service.title },
+  })),
+};
+
+if (site.contact.phone) business.telephone = site.contact.phone;
+if (site.contact.email) business.email = site.contact.email;
+
+const website = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${site.url}/#website`,
+  name: site.name,
+  url: `${site.url}/`,
+  inLanguage: "de-DE",
+  publisher: { "@id": `${site.url}/#business` },
+};
 ---
 
 <Layout
-  title="Montageservice Finta | Küchen-, Möbel- & Türmontage"
-  description="Professionelle Küchen-, Möbel- und Türmontage mit präziser und sauberer Ausführung. Montageservice Finta – zuverlässig und persönlich."
+  title="Küchenmontage, Möbelmontage & Türmontage | Montageservice Finta"
+  description="Montageservice Finta: fachgerechte Küchenmontage, Möbelmontage sowie Montage von Türen und Zargen – präzise, sauber und zuverlässig. Jetzt unverbindlich anfragen."
+  structuredData={[business, website]}
 >
-  <Header />
-
-  <main>
-    <Hero />
-    <Intro />
-    <Services />
-    <Statement />
-    <Portfolio />
-    <Process />
-    <About />
-    <Instagram />
-    <ContactCTA />
-  </main>
-
-  <Footer />
+  <Hero />
+  <Services />
+  <Statement />
+  <Portfolio />
+  <Process />
+  <About />
+  <ContactCTA />
 </Layout>

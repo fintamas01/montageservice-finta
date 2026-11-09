@@ -1,312 +1,154 @@
-<section class="process">
-  <div class="process-inner">
-    <div class="process-header" data-reveal>
-      <div>
-        <p class="eyebrow">So arbeiten wir</p>
+---
+const steps = [
+  {
+    title: "Anfrage",
+    text: "Sie schicken uns die wichtigsten Eckdaten zu Ihrem Projekt – gerne direkt mit Fotos.",
+  },
+  {
+    title: "Abstimmung",
+    text: "Wir besprechen Umfang, Termin und alle relevanten Details persönlich mit Ihnen.",
+  },
+  {
+    title: "Montage",
+    text: "Wir führen die Arbeiten vor Ort fachgerecht, präzise und sauber aus.",
+  },
+  {
+    title: "Übergabe",
+    text: "Zum Abschluss prüfen wir das Ergebnis gemeinsam mit Ihnen und übergeben die fertige Montage.",
+  },
+];
+---
 
-        <h2>
+<section class="section surface-sand" id="ablauf" aria-labelledby="ablauf-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div>
+        <p class="eyebrow">Ablauf</p>
+        <h2 class="display-l" id="ablauf-title">
           Klarer Ablauf.<br />
           <em>Sauberes Ergebnis.</em>
         </h2>
       </div>
-
-      <p class="process-description">
-        Von der ersten Anfrage bis zur fertigen Montage behalten Sie
-        den Überblick. Persönlich, unkompliziert und zuverlässig.
+      <p class="lead">
+        Von der ersten Anfrage bis zur fertigen Montage behalten Sie den
+        Überblick – persönlich, unkompliziert und verlässlich.
       </p>
     </div>
 
-    <div class="steps">
-      <article class="step" data-reveal data-reveal-delay="1">
-        <div class="step-top">
-          <span class="number">01</span>
-          <span class="dot"></span>
-        </div>
-
-        <div>
-          <h3>Anfrage</h3>
-
-          <p>
-            Sie senden uns die wichtigsten Informationen zu Ihrem
-            Projekt – gerne direkt mit Fotos.
-          </p>
-        </div>
-      </article>
-
-      <article class="step" data-reveal data-reveal-delay="2">
-        <div class="step-top">
-          <span class="number">02</span>
-          <span class="dot"></span>
-        </div>
-
-        <div>
-          <h3>Abstimmung</h3>
-
-          <p>
-            Wir besprechen Umfang, Termin und alle relevanten Details
-            persönlich mit Ihnen.
-          </p>
-        </div>
-      </article>
-
-      <article class="step" data-reveal data-reveal-delay="3">
-        <div class="step-top">
-          <span class="number">03</span>
-          <span class="dot"></span>
-        </div>
-
-        <div>
-          <h3>Montage</h3>
-
-          <p>
-            Die Arbeiten werden fachgerecht, präzise und sauber vor Ort
-            ausgeführt.
-          </p>
-        </div>
-      </article>
-
-      <article class="step" data-reveal data-reveal-delay="4">
-        <div class="step-top">
-          <span class="number">04</span>
-          <span class="dot"></span>
-        </div>
-
-        <div>
-          <h3>Übergabe</h3>
-
-          <p>
-            Nach Abschluss kontrollieren wir gemeinsam das Ergebnis und
-            übergeben das fertige Projekt.
-          </p>
-        </div>
-      </article>
-    </div>
+    <ol class="steps">
+      {
+        steps.map((step, index) => (
+          <li class="step" data-reveal data-reveal-delay={index + 1}>
+            <span class="step-number" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <h3 class="display-s">{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
   </div>
 </section>
 
 <style>
-  .process {
-    padding:
-      clamp(110px, 12vw, 190px)
-      clamp(24px, 6vw, 110px);
-
-    background: #e8ded1;
-  }
-
-  .process-inner {
-    width: min(1350px, 100%);
-    margin: 0 auto;
-  }
-
-  .process-header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 70px;
-
-    margin-bottom: clamp(70px, 8vw, 120px);
-  }
-
-  .eyebrow {
-    margin-bottom: 24px;
-
-    color: #89735e;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(55px, 6vw, 94px);
-    font-weight: 400;
-    line-height: 0.92;
-    letter-spacing: -0.035em;
-  }
-
-  h2 em {
-    color: #968069;
-
-    font-weight: 400;
-  }
-
-  .process-description {
-    max-width: 390px;
-
-    color: #716a63;
-
-    font-size: 13px;
-    line-height: 1.9;
-  }
-
   .steps {
-    position: relative;
-
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .steps::before {
-    content: "";
-
-    position: absolute;
-    top: 39px;
-    left: 0;
-    right: 0;
-
-    height: 1px;
-
-    background: #c7b8a7;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    list-style: none;
+    border-top: 1px solid var(--color-line-strong);
   }
 
   .step {
     position: relative;
-
-    min-height: 310px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    padding: 0 35px 0 0;
+    padding: 40px 32px 8px 0;
   }
 
   .step + .step {
-    padding-left: 35px;
-
-    border-left: 1px solid rgba(173, 157, 139, 0.4);
+    padding-left: 32px;
+    border-left: 1px solid var(--color-line);
   }
 
-  .step-top {
-    position: relative;
-    z-index: 2;
-
-    height: 80px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-
-  .number {
-    color: #7b6f62;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.17em;
-  }
-
-  .dot {
-    width: 7px;
-    height: 7px;
-
-    border: 2px solid #e8ded1;
+  .step::before {
+    content: "";
+    position: absolute;
+    top: -4.5px;
+    left: 0;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
+    background: var(--color-accent);
+  }
 
-    outline: 1px solid #8c7761;
+  .step + .step::before {
+    left: 32px;
+  }
 
-    background: #8c7761;
+  .step-number {
+    display: block;
+    margin-bottom: 48px;
+    color: var(--color-accent);
+    font-size: var(--fs-label);
+    font-weight: 600;
+    letter-spacing: var(--tracking-label);
   }
 
   .step h3 {
-    margin-bottom: 20px;
-
-    font-family: var(--font-display);
-    font-size: 42px;
-    font-weight: 400;
+    margin-bottom: 14px;
   }
 
   .step p {
-    max-width: 250px;
-
-    color: #746c64;
-
-    font-size: 12px;
-    line-height: 1.85;
+    max-width: 30ch;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
   }
 
-  @media (max-width: 950px) {
-    .process-header {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
+  @media (max-width: 959.98px) {
     .steps {
-      grid-template-columns: 1fr 1fr;
-      gap: 60px 0;
-    }
-
-    .steps::before {
-      display: none;
-    }
-
-    .step {
-      min-height: 280px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 32px;
     }
 
     .step:nth-child(3) {
-      border-left: 0;
       padding-left: 0;
+      border-left: 0;
+    }
+
+    .step:nth-child(3)::before {
+      left: 0;
+    }
+
+    .step:nth-child(n + 3) {
+      border-top: 1px solid var(--color-line-strong);
     }
   }
 
-  @media (max-width: 600px) {
-    .process {
-      padding:
-        90px
-        20px;
-    }
-
-    .process-header {
-      gap: 30px;
-
-      margin-bottom: 50px;
-    }
-
-    h2 {
-      font-size: clamp(50px, 14vw, 72px);
-    }
-
+  @media (max-width: 599.98px) {
     .steps {
       grid-template-columns: 1fr;
+      row-gap: 0;
+      border-top: 0;
     }
 
     .step,
     .step + .step,
-    .step:nth-child(3) {
-      min-height: auto;
-
-      padding:
-        35px
-        0
-        45px;
-
+    .step:nth-child(n + 3) {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      column-gap: 8px;
+      padding: 28px 0;
       border-left: 0;
-      border-bottom: 1px solid #cabdac;
+      border-top: 1px solid var(--color-line-strong);
     }
 
-    .step-top {
-      height: auto;
-
-      flex-direction: row;
-      align-items: center;
-
-      margin-bottom: 32px;
-    }
-
-    .step h3 {
-      font-size: 38px;
-    }
-
-    .step p {
-      max-width: 100%;
-    }
-
-    .dot {
+    .step::before,
+    .step + .step::before {
       display: none;
+    }
+
+    .step-number {
+      grid-row: span 2;
+      margin: 10px 0 0;
     }
   }
 </style>

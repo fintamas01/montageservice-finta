@@ -1,1151 +1,964 @@
-<section class="request-hero">
-  <div class="request-hero-inner">
+---
+import Icon from "./ui/Icon.astro";
+import { otherServiceValue, services } from "../data/site";
+import { uploadLimits } from "../data/form";
 
-    <p>
-      Projektanfrage
-    </p>
+const serviceOptions = [
+  ...services.map((s) => ({ slug: s.slug, value: s.formValue, label: s.title })),
+  { slug: "sonstiges", value: otherServiceValue, label: "Sonstiges" },
+];
 
-    <span>
-      Unverbindlich · Persönlich · Einfach
-    </span>
+const maxFileMb = uploadLimits.maxFileSize / 1024 / 1024;
+---
 
+<form
+  class="request-form"
+  id="request-form"
+  action="/api/send-request.php"
+  method="post"
+  enctype="multipart/form-data"
+  novalidate
+>
+  <div class="form-status" id="form-status" role="alert" tabindex="-1" hidden>
+    <Icon name="alert" size={20} />
+    <p data-status-text></p>
   </div>
-</section>
 
-<section class="request-section">
-  <div class="request-wrapper">
+  <!-- Spam-Schutz: Honeypot (für Menschen unsichtbar) + Zeitstempel -->
+  <div class="hp-field" aria-hidden="true">
+    <label for="website">Website (bitte leer lassen)</label>
+    <input id="website" type="text" name="website" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="form_ts" id="form_ts" value="" />
 
-    <div class="request-intro">
-      <div class="section-index">
-        <span>01</span>
-        <span class="line"></span>
-        <span>Projektanfrage</span>
+  <!-- 01 Leistung -->
+  <fieldset class="form-block" aria-describedby="service-error">
+    <legend class="block-heading">
+      <span class="block-number" aria-hidden="true">01</span>
+      <span class="block-title">Um welche Leistung geht es? <span class="req" aria-hidden="true">*</span></span>
+    </legend>
+
+    <div class="service-options" data-field="service">
+      {
+        serviceOptions.map((option, index) => (
+          <label class="service-option">
+            <input
+              type="radio"
+              name="service"
+              value={option.value}
+              data-slug={option.slug}
+              required={index === 0}
+            />
+            <span class="option-content">
+              <span class="option-label">{option.label}</span>
+              <span class="option-check" aria-hidden="true">
+                <Icon name="check" size={14} />
+              </span>
+            </span>
+          </label>
+        ))
+      }
+    </div>
+    <p class="field-error" id="service-error" data-error-for="service"></p>
+  </fieldset>
+
+  <!-- 02 Montageort -->
+  <fieldset class="form-block">
+    <legend class="block-heading">
+      <span class="block-number" aria-hidden="true">02</span>
+      <span class="block-title">Wo soll montiert werden?</span>
+    </legend>
+
+    <div class="field-grid field-grid--plz">
+      <div class="field">
+        <label for="postal_code">PLZ <span class="req" aria-hidden="true">*</span></label>
+        <input
+          id="postal_code"
+          type="text"
+          name="postal_code"
+          inputmode="numeric"
+          autocomplete="postal-code"
+          pattern="[0-9]{4,5}"
+          maxlength="5"
+          required
+          aria-describedby="postal_code-error"
+        />
+        <p class="field-error" id="postal_code-error" data-error-for="postal_code"></p>
       </div>
 
-      <p class="eyebrow">Ihr Projekt</p>
+      <div class="field">
+        <label for="city">Ort <span class="req" aria-hidden="true">*</span></label>
+        <input
+          id="city"
+          type="text"
+          name="city"
+          autocomplete="address-level2"
+          maxlength="150"
+          required
+          aria-describedby="city-error"
+        />
+        <p class="field-error" id="city-error" data-error-for="city"></p>
+      </div>
+    </div>
+  </fieldset>
 
-      <h1>
-        Erzählen Sie uns<br />
-        <em>von Ihrem Vorhaben.</em>
-      </h1>
+  <!-- 03 Projekt -->
+  <fieldset class="form-block">
+    <legend class="block-heading">
+      <span class="block-number" aria-hidden="true">03</span>
+      <span class="block-title">Was dürfen wir für Sie montieren?</span>
+    </legend>
 
-      <p class="intro-text">
-        Je mehr Informationen Sie uns senden, desto besser können wir
-        Ihr Projekt einschätzen. Fotos können Sie direkt mitsenden.
+    <div class="field">
+      <label for="message">Projektbeschreibung <span class="req" aria-hidden="true">*</span></label>
+      <p class="field-hint" id="message-hint">
+        Zum Beispiel: Art und Umfang der Montage, Maße, gewünschter Zeitraum,
+        Etage bzw. Zugang.
       </p>
+      <textarea
+        id="message"
+        name="message"
+        rows="7"
+        maxlength="5000"
+        minlength="10"
+        required
+        aria-describedby="message-hint message-error"
+      ></textarea>
+      <p class="field-error" id="message-error" data-error-for="message"></p>
+    </div>
+  </fieldset>
+
+  <!-- 04 Fotos -->
+  <fieldset class="form-block">
+    <legend class="block-heading">
+      <span class="block-number" aria-hidden="true">04</span>
+      <span class="block-title">Fotos <span class="optional">(optional)</span></span>
+    </legend>
+
+    <div class="field">
+      <label class="upload-box" id="upload-box" for="photos">
+        <span class="upload-icon" aria-hidden="true"><Icon name="image" size={22} /></span>
+        <strong>Fotos auswählen</strong>
+        <span class="upload-help" id="photos-hint">
+          Bis zu {uploadLimits.maxFiles} Fotos · JPG, PNG oder WebP · max.
+          {maxFileMb} MB pro Foto
+        </span>
+      </label>
+      <input
+        id="photos"
+        class="upload-input"
+        type="file"
+        name="photos[]"
+        accept={uploadLimits.acceptedTypes.join(",")}
+        multiple
+        aria-describedby="photos-hint photos-error"
+      />
+      <p class="field-error" id="photos-error" data-error-for="photos"></p>
+
+      <div class="file-summary" id="file-summary" hidden>
+        <ul class="file-list" id="file-list" aria-live="polite"></ul>
+        <button type="button" class="file-reset" id="file-reset">
+          <Icon name="close" size={14} />
+          Auswahl entfernen
+        </button>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- 05 Kontakt -->
+  <fieldset class="form-block">
+    <legend class="block-heading">
+      <span class="block-number" aria-hidden="true">05</span>
+      <span class="block-title">Wie erreichen wir Sie?</span>
+    </legend>
+
+    <div class="field-grid">
+      <div class="field">
+        <label for="name">Vor- und Nachname <span class="req" aria-hidden="true">*</span></label>
+        <input id="name" type="text" name="name" autocomplete="name" maxlength="150" required aria-describedby="name-error" />
+        <p class="field-error" id="name-error" data-error-for="name"></p>
+      </div>
+
+      <div class="field">
+        <label for="phone">Telefon <span class="req" aria-hidden="true">*</span></label>
+        <input
+          id="phone"
+          type="tel"
+          name="phone"
+          autocomplete="tel"
+          maxlength="30"
+          pattern="[0-9+()/ \-]{6,30}"
+          required
+          aria-describedby="phone-error"
+        />
+        <p class="field-error" id="phone-error" data-error-for="phone"></p>
+      </div>
+
+      <div class="field">
+        <label for="email">E-Mail <span class="req" aria-hidden="true">*</span></label>
+        <input id="email" type="email" name="email" autocomplete="email" maxlength="254" required aria-describedby="email-error" />
+        <p class="field-error" id="email-error" data-error-for="email"></p>
+      </div>
+
+      <div class="field">
+        <label for="preferred_contact">Bevorzugter Kontaktweg</label>
+        <div class="select-wrap">
+          <select id="preferred_contact" name="preferred_contact">
+            <option value="Telefon">Telefon</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="E-Mail">E-Mail</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- Datenschutz + Absenden -->
+  <div class="submit-area">
+    <div class="privacy">
+      <input
+        id="privacy"
+        type="checkbox"
+        name="privacy"
+        value="accepted"
+        required
+        aria-describedby="privacy-error"
+      />
+      <label for="privacy">
+        Ich habe die <a href="/datenschutz" target="_blank">Datenschutzerklärung<span class="sr-only"> (öffnet in neuem Tab)</span></a>{" "}
+        gelesen und bin einverstanden, dass meine Angaben zur Bearbeitung
+        meiner Anfrage verwendet werden. <span class="req" aria-hidden="true">*</span>
+      </label>
+      <p class="field-error" id="privacy-error" data-error-for="privacy"></p>
     </div>
 
-
-    <form
-      class="request-form"
-      action="/api/send-request.php"
-      method="POST"
-      enctype="multipart/form-data"
-      id="request-form"
-    >
-
-      <!-- Honeypot -->
-      <div class="hp-field" aria-hidden="true">
-        <label>
-          Website
-          <input
-            type="text"
-            name="website"
-            tabindex="-1"
-            autocomplete="off"
-          />
-        </label>
-      </div>
-
-
-      <!-- STEP 01 -->
-      <fieldset class="form-block" data-reveal>
-        <div class="block-heading">
-          <span class="block-number">01</span>
-
-          <div>
-            <p class="block-label">Leistung</p>
-            <h2>Worum geht es?</h2>
-          </div>
-        </div>
-
-        <div class="service-options">
-
-          <label class="service-option">
-            <input
-              type="radio"
-              name="service"
-              value="Küchenmontage"
-              required
-            />
-
-            <span class="option-content">
-              <span class="option-number">01</span>
-
-              <strong>Küchenmontage</strong>
-
-              <span class="check">✓</span>
-            </span>
-          </label>
-
-
-          <label class="service-option">
-            <input
-              type="radio"
-              name="service"
-              value="Möbelmontage"
-            />
-
-            <span class="option-content">
-              <span class="option-number">02</span>
-
-              <strong>Möbelmontage</strong>
-
-              <span class="check">✓</span>
-            </span>
-          </label>
-
-
-          <label class="service-option">
-            <input
-              type="radio"
-              name="service"
-              value="Türen und Zargen"
-            />
-
-            <span class="option-content">
-              <span class="option-number">03</span>
-
-              <strong>Türen & Zargen</strong>
-
-              <span class="check">✓</span>
-            </span>
-          </label>
-
-
-          <label class="service-option">
-            <input
-              type="radio"
-              name="service"
-              value="Sonstiges"
-            />
-
-            <span class="option-content">
-              <span class="option-number">04</span>
-
-              <strong>Sonstiges</strong>
-
-              <span class="check">✓</span>
-            </span>
-          </label>
-
-        </div>
-      </fieldset>
-
-
-      <!-- STEP 02 -->
-      <fieldset class="form-block" data-reveal>
-        <div class="block-heading">
-          <span class="block-number">02</span>
-
-          <div>
-            <p class="block-label">Montageort</p>
-            <h2>Wo findet die Montage statt?</h2>
-          </div>
-        </div>
-
-        <div class="field-grid two-columns">
-          <label class="field">
-            <span>PLZ *</span>
-
-            <input
-              type="text"
-              name="postal_code"
-              placeholder="z. B. 89597"
-              required
-              autocomplete="postal-code"
-            />
-          </label>
-
-          <label class="field">
-            <span>Ort *</span>
-
-            <input
-              type="text"
-              name="city"
-              placeholder="Ort"
-              required
-              autocomplete="address-level2"
-            />
-          </label>
-        </div>
-      </fieldset>
-
-
-      <!-- STEP 03 -->
-      <fieldset class="form-block" data-reveal>
-        <div class="block-heading">
-          <span class="block-number">03</span>
-
-          <div>
-            <p class="block-label">Projekt</p>
-            <h2>Was können wir für Sie tun?</h2>
-          </div>
-        </div>
-
-        <label class="field textarea-field">
-          <span>Projektbeschreibung *</span>
-
-          <textarea
-            name="message"
-            rows="7"
-            required
-            placeholder="Beschreiben Sie kurz Ihr Projekt, den gewünschten Umfang und besondere Anforderungen..."
-          ></textarea>
-        </label>
-      </fieldset>
-
-
-      <!-- STEP 04 -->
-      <fieldset class="form-block" data-reveal>
-        <div class="block-heading">
-          <span class="block-number">04</span>
-
-          <div>
-            <p class="block-label">Fotos</p>
-            <h2>Bilder helfen bei der Einschätzung.</h2>
-          </div>
-        </div>
-
-        <label class="upload-box" id="upload-box">
-          <input
-            id="photos"
-            type="file"
-            name="photos[]"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-          />
-
-          <span class="upload-icon">+</span>
-
-          <strong>Fotos auswählen</strong>
-
-          <span class="upload-help">
-            JPG, PNG oder WebP · mehrere Bilder möglich
-          </span>
-        </label>
-
-        <div
-          class="file-list"
-          id="file-list"
-          aria-live="polite"
-        ></div>
-      </fieldset>
-
-
-      <!-- STEP 05 -->
-      <fieldset class="form-block" data-reveal>
-        <div class="block-heading">
-          <span class="block-number">05</span>
-
-          <div>
-            <p class="block-label">Kontakt</p>
-            <h2>Wie können wir Sie erreichen?</h2>
-          </div>
-        </div>
-
-        <div class="field-grid two-columns">
-
-          <label class="field">
-            <span>Name *</span>
-
-            <input
-              type="text"
-              name="name"
-              required
-              autocomplete="name"
-              placeholder="Vor- und Nachname"
-            />
-          </label>
-
-
-          <label class="field">
-            <span>Telefon *</span>
-
-            <input
-              type="tel"
-              name="phone"
-              required
-              autocomplete="tel"
-              placeholder="+49 ..."
-            />
-          </label>
-
-
-          <label class="field">
-            <span>E-Mail *</span>
-
-            <input
-              type="email"
-              name="email"
-              required
-              autocomplete="email"
-              placeholder="name@email.de"
-            />
-          </label>
-
-
-          <label class="field">
-            <span>Bevorzugter Kontakt</span>
-
-            <select name="preferred_contact">
-              <option value="Telefon">
-                Telefon
-              </option>
-
-              <option value="WhatsApp">
-                WhatsApp
-              </option>
-
-              <option value="E-Mail">
-                E-Mail
-              </option>
-            </select>
-          </label>
-
-        </div>
-      </fieldset>
-
-
-      <!-- PRIVACY + SUBMIT -->
-      <div class="submit-area" data-reveal>
-
-        <label class="privacy">
-          <input
-            type="checkbox"
-            name="privacy"
-            value="accepted"
-            required
-          />
-
-          <span class="custom-checkbox"></span>
-
-          <span>
-            Ich habe die
-            <a href="/datenschutz">
-              Datenschutzerklärung
-            </a>
-            gelesen und stimme der Verarbeitung meiner Daten
-            zur Bearbeitung meiner Anfrage zu.
-          </span>
-        </label>
-
-
-        <button type="submit" class="submit-button">
-          <span>Anfrage senden</span>
-
-          <span class="submit-arrow">↗</span>
-        </button>
-
-      </div>
-
-    </form>
-
+    <p class="required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
+
+    <button type="submit" class="btn btn--dark submit-button" id="submit-button">
+      <span data-submit-label>Anfrage absenden</span>
+      <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
+    </button>
   </div>
-</section>
-
+</form>
 
 <script>
-  const fileInput =
-    document.querySelector<HTMLInputElement>("#photos");
+  import { statusMessages, uploadLimits } from "../data/form";
 
-  const fileList =
-    document.querySelector<HTMLDivElement>("#file-list");
+  const form = document.querySelector<HTMLFormElement>("#request-form");
 
-  const uploadBox =
-    document.querySelector<HTMLLabelElement>("#upload-box");
+  if (form) {
+    const statusBox = form.querySelector<HTMLElement>("#form-status")!;
+    const statusText = statusBox.querySelector<HTMLElement>("[data-status-text]")!;
+    const submitButton = form.querySelector<HTMLButtonElement>("#submit-button")!;
+    const submitLabel = submitButton.querySelector<HTMLElement>("[data-submit-label]")!;
+    const fileInput = form.querySelector<HTMLInputElement>("#photos")!;
+    const uploadBox = form.querySelector<HTMLLabelElement>("#upload-box")!;
+    const fileSummary = form.querySelector<HTMLElement>("#file-summary")!;
+    const fileList = form.querySelector<HTMLUListElement>("#file-list")!;
+    const fileReset = form.querySelector<HTMLButtonElement>("#file-reset")!;
+    const timestamp = form.querySelector<HTMLInputElement>("#form_ts")!;
 
+    timestamp.value = String(Math.floor(Date.now() / 1000));
 
-  const updateFileList = () => {
-    if (!fileInput || !fileList) return;
+    let attempted = false;
 
-    fileList.innerHTML = "";
+    /* ---------- Statusmeldungen ---------- */
 
-    const files = Array.from(fileInput.files ?? []);
+    const showStatus = (message: string) => {
+      statusText.textContent = message;
+      statusBox.hidden = false;
+      statusBox.focus();
+    };
 
-    files.forEach((file, index) => {
-      const item = document.createElement("div");
+    const hideStatus = () => {
+      statusBox.hidden = true;
+    };
 
-      item.className = "file-item";
+    // Fallback ohne JavaScript-Versand: Server leitet mit ?status=… zurück
+    const params = new URLSearchParams(window.location.search);
+    const initialStatus = params.get("status");
+    if (initialStatus) {
+      showStatus(statusMessages[initialStatus] ?? statusMessages.send);
+    }
 
-      const size =
-        file.size < 1024 * 1024
-          ? `${Math.round(file.size / 1024)} KB`
-          : `${(file.size / 1024 / 1024).toFixed(1)} MB`;
+    // Leistung aus Link vorauswählen (?leistung=kuechenmontage)
+    const preselect = params.get("leistung");
+    if (preselect) {
+      const radio = form.querySelector<HTMLInputElement>(
+        `input[name="service"][data-slug="${CSS.escape(preselect)}"]`,
+      );
+      if (radio) radio.checked = true;
+    }
 
-      item.innerHTML = `
-        <span>${String(index + 1).padStart(2, "0")}</span>
+    /* ---------- Validierung ---------- */
 
-        <strong>${file.name}</strong>
+    const formatSize = (bytes: number) =>
+      bytes < 1024 * 1024
+        ? `${Math.max(1, Math.round(bytes / 1024))} KB`
+        : `${(bytes / 1024 / 1024).toFixed(1).replace(".", ",")} MB`;
 
-        <small>${size}</small>
-      `;
+    const validateFiles = (): string => {
+      const files = Array.from(fileInput.files ?? []);
+      if (files.length > uploadLimits.maxFiles) return statusMessages.files;
+      let total = 0;
+      for (const file of files) {
+        if (!(uploadLimits.acceptedTypes as readonly string[]).includes(file.type)) {
+          return statusMessages.filetype;
+        }
+        if (file.size > uploadLimits.maxFileSize) return statusMessages.filesize;
+        total += file.size;
+      }
+      if (total > uploadLimits.maxTotalSize) return statusMessages.filesize;
+      return "";
+    };
 
-      fileList.appendChild(item);
+    const validators: Record<string, () => string> = {
+      service: () =>
+        form.querySelector('input[name="service"]:checked') ? "" : "Bitte wählen Sie eine Leistung aus.",
+      postal_code: () => {
+        const v = (form.elements.namedItem("postal_code") as HTMLInputElement).value.trim();
+        if (!v) return "Bitte geben Sie die Postleitzahl an.";
+        return /^[0-9]{4,5}$/.test(v) ? "" : "Bitte geben Sie eine gültige Postleitzahl an (4–5 Ziffern).";
+      },
+      city: () =>
+        (form.elements.namedItem("city") as HTMLInputElement).value.trim() ? "" : "Bitte geben Sie den Ort an.",
+      message: () => {
+        const v = (form.elements.namedItem("message") as HTMLTextAreaElement).value.trim();
+        if (!v) return "Bitte beschreiben Sie kurz Ihr Projekt.";
+        return v.length >= 10 ? "" : "Bitte beschreiben Sie Ihr Projekt etwas ausführlicher.";
+      },
+      photos: validateFiles,
+      name: () =>
+        (form.elements.namedItem("name") as HTMLInputElement).value.trim() ? "" : "Bitte geben Sie Ihren Namen an.",
+      phone: () => {
+        const v = (form.elements.namedItem("phone") as HTMLInputElement).value.trim();
+        if (!v) return "Bitte geben Sie eine Telefonnummer an.";
+        return /^[0-9+()/ \-]{6,30}$/.test(v) ? "" : "Bitte geben Sie eine gültige Telefonnummer an.";
+      },
+      email: () => {
+        const input = form.elements.namedItem("email") as HTMLInputElement;
+        const v = input.value.trim();
+        if (!v) return "Bitte geben Sie Ihre E-Mail-Adresse an.";
+        return input.validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+          ? "Bitte geben Sie eine gültige E-Mail-Adresse an."
+          : "";
+      },
+      privacy: () =>
+        (form.elements.namedItem("privacy") as HTMLInputElement).checked
+          ? ""
+          : "Bitte bestätigen Sie die Datenschutzhinweise.",
+    };
+
+    const setFieldError = (name: string, message: string) => {
+      const errorEl = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (errorEl) errorEl.textContent = message;
+
+      const targets =
+        name === "service"
+          ? form.querySelectorAll<HTMLInputElement>('input[name="service"]')
+          : form.querySelectorAll<HTMLElement>(`#${name}`);
+
+      targets.forEach((el) => {
+        if (message) el.setAttribute("aria-invalid", "true");
+        else el.removeAttribute("aria-invalid");
+      });
+    };
+
+    const validateField = (name: string) => {
+      const message = validators[name]?.() ?? "";
+      setFieldError(name, message);
+      return message;
+    };
+
+    const validateAll = () => {
+      let firstInvalid: string | null = null;
+      for (const name of Object.keys(validators)) {
+        if (validateField(name) && !firstInvalid) firstInvalid = name;
+      }
+      return firstInvalid;
+    };
+
+    const focusField = (name: string) => {
+      const el =
+        name === "service"
+          ? form.querySelector<HTMLInputElement>('input[name="service"]')
+          : form.querySelector<HTMLElement>(`#${name}`);
+      el?.focus();
+    };
+
+    form.addEventListener("input", (event) => {
+      const target = event.target as HTMLInputElement;
+      if (attempted && validators[target.name.replace("[]", "")]) {
+        validateField(target.name === "photos[]" ? "photos" : target.name);
+      }
     });
-  };
 
+    form.addEventListener(
+      "blur",
+      (event) => {
+        const target = event.target as HTMLInputElement;
+        if (attempted && target.name && validators[target.name]) validateField(target.name);
+      },
+      true,
+    );
 
-  fileInput?.addEventListener(
-    "change",
-    updateFileList
-  );
+    /* ---------- Datei-Upload ---------- */
 
+    const renderFiles = () => {
+      const files = Array.from(fileInput.files ?? []);
+      fileList.replaceChildren(
+        ...files.map((file, index) => {
+          const li = document.createElement("li");
+          const num = document.createElement("span");
+          const name = document.createElement("strong");
+          const size = document.createElement("small");
+          num.textContent = String(index + 1).padStart(2, "0");
+          name.textContent = file.name; // textContent: kein HTML-Injection-Risiko
+          size.textContent = formatSize(file.size);
+          li.append(num, name, size);
+          return li;
+        }),
+      );
+      fileSummary.hidden = files.length === 0;
+      validateField("photos");
+    };
 
-  ["dragenter", "dragover"].forEach((eventName) => {
-    uploadBox?.addEventListener(eventName, () => {
-      uploadBox.classList.add("dragging");
+    fileInput.addEventListener("change", renderFiles);
+
+    fileReset.addEventListener("click", () => {
+      fileInput.value = "";
+      renderFiles();
+      fileInput.focus();
     });
-  });
 
+    ["dragenter", "dragover"].forEach((type) =>
+      uploadBox.addEventListener(type, (event) => {
+        event.preventDefault();
+        uploadBox.classList.add("is-dragging");
+      }),
+    );
 
-  ["dragleave", "drop"].forEach((eventName) => {
-    uploadBox?.addEventListener(eventName, () => {
-      uploadBox.classList.remove("dragging");
+    ["dragleave", "dragend"].forEach((type) =>
+      uploadBox.addEventListener(type, () => uploadBox.classList.remove("is-dragging")),
+    );
+
+    uploadBox.addEventListener("drop", (event) => {
+      event.preventDefault();
+      uploadBox.classList.remove("is-dragging");
+      if (event.dataTransfer?.files.length) {
+        fileInput.files = event.dataTransfer.files;
+        renderFiles();
+      }
     });
-  });
+
+    /* ---------- Absenden ---------- */
+
+    const setLoading = (loading: boolean) => {
+      submitButton.disabled = loading;
+      submitButton.setAttribute("aria-busy", String(loading));
+      submitLabel.textContent = loading ? "Wird gesendet …" : "Anfrage absenden";
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      attempted = true;
+      hideStatus();
+
+      const firstInvalid = validateAll();
+      if (firstInvalid) {
+        focusField(firstInvalid);
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+
+        const result = (await response.json().catch(() => null)) as {
+          ok?: boolean;
+          code?: string;
+          field?: string;
+          redirect?: string;
+        } | null;
+
+        if (response.ok && result?.ok) {
+          window.location.assign(result.redirect ?? "/danke");
+          return;
+        }
+
+        const code = result?.code ?? "send";
+        const message = statusMessages[code] ?? statusMessages.send;
+        if (result?.field && validators[result.field]) {
+          setFieldError(result.field, message);
+        }
+        showStatus(message);
+      } catch {
+        showStatus(statusMessages.network);
+      } finally {
+        setLoading(false);
+      }
+    });
+  }
 </script>
 
-
 <style>
-  .request-hero {
-    height: 112px;
-
-    background: var(--anthracite-dark);
+  .request-form {
+    position: relative;
+    min-width: 0;
   }
 
+  .form-status {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding: 18px 20px;
+    border-left: 3px solid var(--color-error);
+    background: var(--color-error-bg);
+    color: var(--color-error);
+    font-weight: 500;
+  }
 
-  .request-hero-inner {
+  .form-status[hidden] {
     display: none;
   }
 
-  .request-section {
-    padding:
-      190px
-      clamp(24px, 6vw, 110px)
-      clamp(110px, 12vw, 190px);
-
-    background: var(--off-white);
+  .form-status :global(.icon) {
+    flex: none;
+    margin-top: 2px;
   }
 
-
-  .request-wrapper {
-    width: min(1250px, 100%);
-    margin: 0 auto;
+  .form-status:focus {
+    outline: none;
   }
-
-
-  /* INTRO */
-
-  .request-intro {
-    max-width: 1000px;
-
-    margin-bottom: 130px;
-  }
-
-
-  .section-index {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    margin-bottom: 55px;
-
-    color: #8d8881;
-
-    font-size: 9px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-
-
-  .section-index .line {
-    width: 28px;
-    height: 1px;
-
-    background: #aaa299;
-  }
-
-
-  .eyebrow {
-    margin-bottom: 28px;
-
-    color: #927d65;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-
-  h1 {
-    font-family: var(--font-display);
-
-    font-size: clamp(68px, 8vw, 125px);
-    font-weight: 400;
-
-    line-height: .84;
-
-    letter-spacing: -.045em;
-  }
-
-
-  h1 em {
-    color: #9a856e;
-
-    font-weight: 400;
-  }
-
-
-  .intro-text {
-    max-width: 540px;
-
-    margin-top: 55px;
-
-    color: #736f69;
-
-    font-size: 13px;
-    line-height: 1.9;
-  }
-
-
-  /* FORM */
-
-  .request-form {
-    max-width: 1050px;
-
-    margin-left: auto;
-  }
-
 
   .form-block {
+    min-width: 0;
     margin: 0;
-    padding:
-      85px
-      0
-      95px;
-
+    padding: clamp(40px, 5vw, 64px) 0;
     border: 0;
-    border-top: 1px solid #d8cfc4;
+    border-top: 1px solid var(--color-line);
   }
 
+  .form-block:first-of-type {
+    padding-top: 0;
+    border-top: 0;
+  }
 
+  /* float holt die <legend> aus dem Fieldset-Rahmen in den normalen Fluss,
+     damit Abstände wie bei normalen Überschriften funktionieren */
   .block-heading {
-    display: grid;
-    grid-template-columns: 80px 1fr;
-
-    margin-bottom: 55px;
+    float: left;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    width: 100%;
+    margin-bottom: 28px;
+    padding: 0;
   }
 
+  .block-heading + * {
+    clear: both;
+  }
 
   .block-number {
-    padding-top: 9px;
-
-    color: #a09282;
-
-    font-size: 9px;
-    letter-spacing: .16em;
-  }
-
-
-  .block-label {
-    margin-bottom: 12px;
-
-    color: #927d65;
-
-    font-size: 9px;
+    flex: none;
+    color: var(--color-accent);
+    font-size: var(--fs-label);
     font-weight: 600;
-
-    letter-spacing: .18em;
-    text-transform: uppercase;
+    letter-spacing: var(--tracking-label);
   }
 
-
-  .block-heading h2 {
+  .block-title {
     font-family: var(--font-display);
-
-    font-size: clamp(40px, 4vw, 60px);
-    font-weight: 400;
-
-    line-height: 1;
+    font-size: var(--fs-display-s);
+    line-height: 1.15;
   }
 
+  .optional {
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: var(--fs-small);
+  }
 
-  /* SERVICE OPTIONS */
+  .req {
+    color: var(--color-accent);
+  }
+
+  /* Leistung */
 
   .service-options {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    gap: 12px;
-
-    margin-left: 80px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
-
   .service-option {
+    position: relative;
     cursor: pointer;
   }
 
-
   .service-option input {
     position: absolute;
-
     opacity: 0;
-
-    pointer-events: none;
+    width: 1px;
+    height: 1px;
   }
-
 
   .option-content {
-    min-height: 105px;
-
-    display: grid;
-    grid-template-columns: 45px 1fr 35px;
-
-    align-items: center;
-
-    padding: 0 25px;
-
-    border: 1px solid #cec4b8;
-
-    transition:
-      background .3s ease,
-      border-color .3s ease,
-      color .3s ease;
-  }
-
-
-  .option-number {
-    color: #9f9386;
-
-    font-size: 9px;
-    letter-spacing: .14em;
-  }
-
-
-  .option-content strong {
-    font-size: 11px;
-    font-weight: 600;
-
-    letter-spacing: .06em;
-    text-transform: uppercase;
-  }
-
-
-  .check {
-    width: 28px;
-    height: 28px;
-
+    min-height: 68px;
     display: flex;
     align-items: center;
-    justify-content: center;
-
-    border: 1px solid #c4b9ac;
-    border-radius: 50%;
-
-    color: transparent;
-
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 18px 12px 22px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-white);
     transition:
-      background .3s ease,
-      border-color .3s ease,
-      color .3s ease;
+      background-color var(--duration) ease,
+      border-color var(--duration) ease,
+      color var(--duration) ease;
   }
 
+  .option-label {
+    font-weight: 600;
+  }
+
+  .option-check {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    color: transparent;
+    transition:
+      background-color var(--duration) ease,
+      border-color var(--duration) ease,
+      color var(--duration) ease;
+  }
 
   .service-option:hover .option-content {
-    border-color: #a99680;
+    border-color: var(--color-accent);
   }
 
+  .service-option input:focus-visible + .option-content {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
 
   .service-option input:checked + .option-content {
-    background: var(--anthracite-dark);
-
-    border-color: var(--anthracite-dark);
-
-    color: white;
+    border-color: var(--color-ink);
+    background: var(--color-ink);
+    color: var(--color-white);
   }
 
-
-  .service-option
-  input:checked
-  + .option-content
-  .option-number {
-    color: var(--beige);
+  .service-option input:checked + .option-content .option-check {
+    border-color: var(--color-sand);
+    background: var(--color-sand);
+    color: var(--color-ink);
   }
 
-
-  .service-option
-  input:checked
-  + .option-content
-  .check {
-    background: var(--beige);
-
-    border-color: var(--beige);
-
-    color: var(--anthracite-dark);
+  .service-option input[aria-invalid="true"] + .option-content {
+    border-color: var(--color-error);
   }
 
-
-  /* FIELDS */
+  /* Felder */
 
   .field-grid {
-    margin-left: 80px;
-  }
-
-
-  .two-columns {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    gap: 32px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 32px;
   }
 
+  .field-grid--plz {
+    grid-template-columns: minmax(0, 0.6fr) minmax(0, 1.4fr);
+  }
 
   .field {
     display: flex;
     flex-direction: column;
-
-    gap: 12px;
+    gap: 8px;
+    min-width: 0;
   }
 
-
-  .field > span {
-    color: #7d756c;
-
-    font-size: 9px;
+  .field > label:not(.upload-box) {
+    font-size: var(--fs-small);
     font-weight: 600;
-
-    letter-spacing: .14em;
-    text-transform: uppercase;
   }
 
+  .field-hint {
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
+  }
 
   .field input,
   .field textarea,
   .field select {
     width: 100%;
-
-    padding:
-      17px
-      0;
-
-    border: 0;
-    border-bottom: 1px solid #c9bfb4;
-
-    outline: 0;
-
-    background: transparent;
-
-    color: var(--anthracite-dark);
-
-    border-radius: 0;
-
-    font-size: 14px;
-
-    transition: border-color .25s ease;
+    min-height: 52px;
+    padding: 12px 16px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-white);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem;
+    transition:
+      border-color var(--duration) ease,
+      box-shadow var(--duration) ease;
   }
-
 
   .field textarea {
-    resize: vertical;
-
     min-height: 180px;
-
-    line-height: 1.7;
+    resize: vertical;
+    line-height: 1.6;
   }
 
-
-  .field input::placeholder,
-  .field textarea::placeholder {
-    color: #aaa39b;
+  .field input:hover,
+  .field textarea:hover,
+  .field select:hover {
+    border-color: var(--color-accent);
   }
-
 
   .field input:focus,
   .field textarea:focus,
   .field select:focus {
-    border-color: #8e775f;
+    border-color: var(--color-ink);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(107 89 71 / 0.25);
   }
 
-
-  .textarea-field {
-    margin-left: 80px;
+  .field [aria-invalid="true"] {
+    border-color: var(--color-error);
   }
 
-
-  /* UPLOAD */
-
-  .upload-box {
-    min-height: 230px;
-
-    margin-left: 80px;
-
-    display: flex;
-    flex-direction: column;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 35px;
-
-    border: 1px dashed #b9aa99;
-
-    cursor: pointer;
-
-    text-align: center;
-
-    transition:
-      background .3s ease,
-      border-color .3s ease;
+  .select-wrap {
+    position: relative;
   }
 
-
-  .upload-box:hover,
-  .upload-box.dragging {
-    background: #eee7dd;
-
-    border-color: #8d7760;
-  }
-
-
-  .upload-box input {
+  .select-wrap::after {
+    content: "";
     position: absolute;
-
-    opacity: 0;
-
+    top: 50%;
+    right: 18px;
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-70%) rotate(45deg);
     pointer-events: none;
   }
 
+  .field select {
+    appearance: none;
+    padding-right: 44px;
+  }
 
-  .upload-icon {
-    width: 48px;
-    height: 48px;
+  .field-error {
+    color: var(--color-error);
+    font-size: var(--fs-small);
+    font-weight: 500;
+  }
 
+  .field-error:empty {
+    display: none;
+  }
+
+  /* Upload */
+
+  /* visuell versteckt, aber fokussierbar (Label dient als Dropzone) */
+  .field .upload-input {
+    position: absolute;
+    width: 1px;
+    min-height: 0;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .upload-box {
+    min-height: 190px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    margin-bottom: 20px;
-
-    border: 1px solid #ad9d8c;
-    border-radius: 50%;
-
-    font-family: var(--font-display);
-
-    font-size: 29px;
-    font-weight: 300;
+    gap: 6px;
+    padding: 28px 20px;
+    border: 1px dashed var(--color-line-strong);
+    border-radius: var(--radius);
+    background: var(--color-white);
+    text-align: center;
+    cursor: pointer;
+    transition:
+      background-color var(--duration) ease,
+      border-color var(--duration) ease;
   }
 
+  .upload-box:hover,
+  .upload-box.is-dragging {
+    border-color: var(--color-accent);
+    background: #fbf9f6;
+  }
+
+  .field:has(.upload-input:focus-visible) .upload-box {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  .upload-icon {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 10px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    color: var(--color-accent);
+  }
 
   .upload-box strong {
-    font-size: 11px;
     font-weight: 600;
-
-    letter-spacing: .08em;
-    text-transform: uppercase;
   }
-
 
   .upload-help {
-    margin-top: 9px;
-
-    color: #8e877f;
-
-    font-size: 10px;
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
   }
 
+  .file-summary {
+    margin-top: 12px;
+  }
 
   .file-list {
-    margin:
-      20px
-      0
-      0
-      80px;
+    list-style: none;
   }
 
-
-  .file-item {
+  .file-list :global(li) {
     display: grid;
-    grid-template-columns: 45px 1fr auto;
-
+    grid-template-columns: 36px minmax(0, 1fr) auto;
     align-items: center;
-
+    gap: 8px;
     min-height: 48px;
-
-    border-bottom: 1px solid #ddd4ca;
-
-    font-size: 10px;
+    border-bottom: 1px solid var(--color-line);
+    font-size: var(--fs-small);
   }
 
-
-  .file-item > span {
-    color: #9c8d7c;
+  .file-list :global(span) {
+    color: var(--color-accent);
+    font-size: var(--fs-label);
   }
 
-
-  .file-item strong {
+  .file-list :global(strong) {
     overflow: hidden;
-
     font-weight: 500;
-
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-
-  .file-item small {
-    color: #958d84;
+  .file-list :global(small) {
+    color: var(--color-text-muted);
+    font-size: var(--fs-label);
   }
 
-
-  /* SUBMIT */
-
-  .submit-area {
-    padding:
-      70px
-      0
-      0
-      80px;
-
-    border-top: 1px solid #d8cfc4;
-  }
-
-
-  .privacy {
-    max-width: 680px;
-
-    display: grid;
-    grid-template-columns: 22px 1fr;
-
-    gap: 15px;
-
-    align-items: flex-start;
-
-    color: #77716a;
-
-    cursor: pointer;
-
-    font-size: 10px;
-    line-height: 1.7;
-  }
-
-
-  .privacy input {
-    position: absolute;
-
-    opacity: 0;
-
-    pointer-events: none;
-  }
-
-
-  .custom-checkbox {
-    width: 20px;
-    height: 20px;
-
-    display: block;
-
-    border: 1px solid #afa294;
-
-    transition:
-      background .2s ease,
-      border-color .2s ease;
-  }
-
-
-  .privacy
-  input:checked
-  + .custom-checkbox {
-    position: relative;
-
-    background: var(--anthracite-dark);
-
-    border-color: var(--anthracite-dark);
-  }
-
-
-  .privacy
-  input:checked
-  + .custom-checkbox::after {
-    content: "✓";
-
-    position: absolute;
-
-    inset: 0;
-
-    display: flex;
+  .file-reset {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-
-    color: white;
-
-    font-size: 11px;
-  }
-
-
-  .privacy a {
-    color: var(--anthracite-dark);
-
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
+  .file-reset:hover {
+    color: var(--color-ink);
+  }
+
+  /* Absenden */
+
+  .submit-area {
+    padding-top: clamp(40px, 5vw, 56px);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .privacy {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr);
+    gap: 6px 14px;
+    max-width: 640px;
+    color: var(--color-text-muted);
+    font-size: 0.9375rem;
+  }
+
+  .privacy input {
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    accent-color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  .privacy label {
+    cursor: pointer;
+  }
+
+  .privacy a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .privacy .field-error {
+    grid-column: 2;
+  }
+
+  .required-note {
+    margin-top: 20px;
+    color: var(--color-text-muted);
+    font-size: var(--fs-small);
+  }
 
   .submit-button {
-    width: min(390px, 100%);
-
-    min-height: 80px;
-
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
-
-    margin-top: 45px;
-
-    padding:
-      0
-      20px
-      0
-      30px;
-
-    border: 0;
-
-    background: var(--anthracite-dark);
-
-    color: white;
-
-    font-size: 11px;
-    font-weight: 600;
-
-    letter-spacing: .12em;
-    text-transform: uppercase;
-
-    cursor: pointer;
-
-    transition:
-      background .3s ease,
-      transform .3s ease;
+    width: min(380px, 100%);
+    min-height: 64px;
+    margin-top: 28px;
   }
 
-
-  .submit-button:hover {
-    background: #312f2b;
-
-    transform: translateY(-3px);
+  .submit-button:disabled {
+    cursor: progress;
+    opacity: 0.7;
   }
-
-
-  .submit-arrow {
-    width: 45px;
-    height: 45px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid rgba(255,255,255,.25);
-
-    font-size: 16px;
-  }
-
 
   .hp-field {
     position: absolute;
-
-    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  @media (max-width: 750px) {
-    .request-section {
-      padding:
-        120px
-        20px
-        90px;
-    }
-
-    .request-intro {
-      margin-bottom: 70px;
-    }
-
-    .section-index {
-      margin-bottom: 35px;
-    }
-
-    h1 {
-      font-size: clamp(56px, 15vw, 78px);
-
-      line-height: 0.88;
-    }
-
-    .intro-text {
-      margin-top: 38px;
-
-      font-size: 12px;
-    }
-
-    .form-block {
-      padding:
-        55px
-        0
-        65px;
-    }
-
-    .block-heading {
-      grid-template-columns: 1fr;
-
-      gap: 18px;
-
-      margin-bottom: 38px;
-    }
-
-    .block-heading h2 {
-      font-size: 38px;
-    }
-
+  @media (max-width: 639.98px) {
     .service-options,
     .field-grid,
-    .textarea-field,
-    .upload-box,
-    .file-list,
-    .submit-area {
-      margin-left: 0;
-    }
-
-    .service-options {
+    .field-grid--plz {
       grid-template-columns: 1fr;
-    }
-
-    .option-content {
-      min-height: 82px;
-
-      padding:
-        0
-        18px;
-    }
-
-    .two-columns {
-      grid-template-columns: 1fr;
-
-      gap: 30px;
-    }
-
-    .upload-box {
-      min-height: 200px;
-
-      padding: 25px 18px;
     }
 
     .submit-button {

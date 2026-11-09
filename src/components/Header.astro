@@ -1,493 +1,413 @@
-<header class="site-header" id="site-header">
-  <a href="/" class="brand">
-    <span>MONTAGESERVICE</span>
-    <strong>FINTA</strong>
-  </a>
+---
+import Icon from "./ui/Icon.astro";
+import { navigation, site, telHref } from "../data/site";
 
-  <nav class="desktop-nav">
-    <a href="#leistungen">Leistungen</a>
-    <a href="#referenzen">Referenzen</a>
-    <a href="#ueber-uns">Über uns</a>
-    <a href="#kontakt">Kontakt</a>
-  </nav>
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isRequestPage = currentPath === "/anfrage";
+---
 
-  <a href="/anfrage" class="header-cta">
-    Anfrage senden
-    <span>↗</span>
-  </a>
+<header class="site-header on-dark" id="site-header" data-menu-open="false">
+  <div class="header-bar">
+    <a href="/" class="brand" aria-label={`${site.name} – zur Startseite`}>
+      <span class="brand-small" aria-hidden="true">Montageservice</span>
+      <span class="brand-name" aria-hidden="true">Finta</span>
+    </a>
 
-  <button
-    class="mobile-menu-button"
-    id="mobile-menu-button"
-    aria-label="Menü öffnen"
-    aria-expanded="false"
-  >
-    <span></span>
-    <span></span>
-  </button>
-</header>
-
-
-<div class="mobile-nav" id="mobile-nav">
-
-  <div class="mobile-nav-inner">
-
-    <nav>
-      <a href="#leistungen">
-        <span>01</span>
-        Leistungen
-      </a>
-
-      <a href="#referenzen">
-        <span>02</span>
-        Referenzen
-      </a>
-
-      <a href="#ueber-uns">
-        <span>03</span>
-        Über uns
-      </a>
-
-      <a href="#kontakt">
-        <span>04</span>
-        Kontakt
-      </a>
+    <nav class="desktop-nav" aria-label="Hauptnavigation">
+      <ul>
+        {
+          navigation.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))
+        }
+      </ul>
     </nav>
 
-    <div class="mobile-nav-bottom">
-      <span>Montageservice Finta</span>
+    <a
+      href="/anfrage"
+      class="btn btn--outline-light header-cta"
+      aria-current={isRequestPage ? "page" : undefined}
+    >
+      Anfrage stellen
+      <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
+    </a>
 
-      <a
-        href="https://www.instagram.com/montageservicefinta/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Instagram ↗
-      </a>
-    </div>
-
+    <button
+      type="button"
+      class="menu-toggle"
+      id="menu-toggle"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <span class="sr-only" data-menu-label>Menü öffnen</span>
+      <span class="menu-toggle-lines" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </span>
+    </button>
   </div>
-</div>
 
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav aria-label="Mobile Navigation">
+      <ol>
+        {
+          navigation.map((item, index) => (
+            <li>
+              <a href={item.href}>
+                <span class="menu-index" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="mobile-menu-footer">
+      <a href="/anfrage" class="btn btn--sand">
+        Montage anfragen
+        <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
+      </a>
+
+      <div class="mobile-menu-links">
+        {
+          site.contact.phone && (
+            <a href={telHref(site.contact.phone)}>
+              <Icon name="phone" size={16} />
+              {site.contact.phone}
+            </a>
+          )
+        }
+        <a href={site.instagram.url} target="_blank" rel="noopener noreferrer">
+          <Icon name="instagram" size={16} />
+          Instagram
+          <span class="sr-only">(öffnet in neuem Tab)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
 
 <script>
   const header = document.getElementById("site-header");
-  const button = document.getElementById("mobile-menu-button");
-  const mobileNav = document.getElementById("mobile-nav");
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const label = toggle?.querySelector<HTMLElement>("[data-menu-label]");
+  const desktopQuery = window.matchMedia("(min-width: 1024px)");
 
-  const updateHeader = () => {
-    if (!header) return;
+  if (header && toggle && menu) {
+    const backgroundRegions = () =>
+      Array.from(document.querySelectorAll<HTMLElement>("main, footer, .skip-link"));
 
-    if (window.scrollY > 40) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
-  };
+    const setOpen = (open: boolean, { restoreFocus = true } = {}) => {
+      header.dataset.menuOpen = String(open);
+      toggle.setAttribute("aria-expanded", String(open));
+      if (label) label.textContent = open ? "Menü schließen" : "Menü öffnen";
 
-  updateHeader();
+      menu.hidden = !open;
+      document.documentElement.classList.toggle("menu-locked", open);
+      backgroundRegions().forEach((el) => el.toggleAttribute("inert", open));
 
-  window.addEventListener("scroll", updateHeader, {
-    passive: true,
-  });
+      if (open) {
+        menu.querySelector<HTMLElement>("a")?.focus();
+      } else if (restoreFocus) {
+        toggle.focus();
+      }
+    };
 
-  button?.addEventListener("click", () => {
-    const open = button.classList.toggle("active");
-
-    mobileNav?.classList.toggle("active", open);
-
-    button.setAttribute(
-      "aria-expanded",
-      open ? "true" : "false"
-    );
-
-    document.body.style.overflow = open ? "hidden" : "";
-  });
-
-  mobileNav?.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      button?.classList.remove("active");
-      mobileNav.classList.remove("active");
-
-      button?.setAttribute("aria-expanded", "false");
-
-      document.body.style.overflow = "";
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
     });
-  });
-</script>
 
+    menu.addEventListener("click", (event) => {
+      if ((event.target as HTMLElement).closest("a")) {
+        setOpen(false, { restoreFocus: false });
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+      }
+    });
+
+    desktopQuery.addEventListener("change", (event) => {
+      if (event.matches) setOpen(false, { restoreFocus: false });
+    });
+
+    const updateScrolled = () => {
+      header.classList.toggle("is-scrolled", window.scrollY > 24);
+    };
+
+    updateScrolled();
+    window.addEventListener("scroll", updateScrolled, { passive: true });
+  }
+</script>
 
 <style>
   .site-header {
     position: fixed;
     z-index: 100;
+    inset: 0 0 auto;
+    color: var(--color-on-dark);
+  }
 
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 112px;
-
+  .header-bar {
+    position: relative;
+    z-index: 2;
+    height: var(--header-height);
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-
-    padding: 0 clamp(24px, 4vw, 72px);
-
-    color: white;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-
+    gap: 24px;
+    padding-inline: var(--gutter);
+    border-bottom: 1px solid rgb(255 255 255 / 0.14);
     transition:
-      height 0.4s ease,
-      background 0.4s ease,
-      backdrop-filter 0.4s ease,
-      border-color 0.4s ease;
+      height 0.35s var(--ease-out),
+      background-color 0.35s ease,
+      border-color 0.35s ease;
   }
 
-
-  .site-header.scrolled {
-    height: 82px;
-
-    background: rgba(20, 20, 19, 0.86);
-
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    border-bottom-color: rgba(255, 255, 255, 0.09);
+  .site-header.is-scrolled .header-bar,
+  .site-header[data-menu-open="true"] .header-bar {
+    height: var(--header-height-compact);
+    background: rgb(20 20 19 / 0.94);
+    border-bottom-color: rgb(255 255 255 / 0.08);
   }
 
+  @supports (backdrop-filter: blur(1px)) {
+    .site-header.is-scrolled .header-bar {
+      background: rgb(20 20 19 / 0.82);
+      backdrop-filter: blur(14px);
+    }
+  }
 
   .brand {
-    width: max-content;
-
+    justify-self: start;
     display: flex;
     flex-direction: column;
-
-    font-size: 10px;
+    padding-block: 6px;
     line-height: 1;
-    letter-spacing: 0.24em;
   }
 
+  .brand-small {
+    color: var(--color-sand);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+  }
 
-  .brand strong {
-    margin-top: 5px;
-
+  .brand-name {
+    margin-top: 4px;
     font-family: var(--font-display);
-    font-size: 31px;
+    font-size: 1.75rem;
     font-weight: 500;
-    letter-spacing: 0.07em;
-
-    transition: font-size 0.4s ease;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-
-  .site-header.scrolled .brand strong {
-    font-size: 27px;
-  }
-
-
-  .desktop-nav {
+  .desktop-nav ul {
     display: flex;
-    align-items: center;
-
-    gap: clamp(28px, 3vw, 50px);
-
-    font-size: 13px;
+    gap: clamp(24px, 2.6vw, 44px);
+    list-style: none;
   }
-
 
   .desktop-nav a {
     position: relative;
-
-    opacity: 0.82;
-
-    transition: opacity 0.3s ease;
+    display: inline-block;
+    padding-block: 10px;
+    color: var(--color-on-dark-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: color var(--duration) ease;
   }
-
 
   .desktop-nav a::after {
     content: "";
-
     position: absolute;
-
     left: 0;
-    bottom: -8px;
-
-    width: 0;
+    right: 0;
+    bottom: 4px;
     height: 1px;
-
-    background: var(--beige);
-
-    transition: width 0.35s ease;
+    background: var(--color-sand);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-out);
   }
-
 
   .desktop-nav a:hover {
-    opacity: 1;
+    color: var(--color-white);
   }
-
 
   .desktop-nav a:hover::after {
-    width: 100%;
+    transform: scaleX(1);
   }
-
 
   .header-cta {
     justify-self: end;
-
-    display: flex;
-    align-items: center;
-
-    gap: 16px;
-
-    padding: 15px 20px;
-
-    border: 1px solid rgba(255, 255, 255, 0.35);
-
-    font-size: 11px;
-    font-weight: 600;
-
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-
-    transition:
-      background 0.3s ease,
-      color 0.3s ease,
-      border-color 0.3s ease;
+    min-height: 48px;
+    padding-block: 4px;
+    padding-right: 4px;
   }
 
-
-  .header-cta:hover {
-    background: var(--beige);
-
-    border-color: var(--beige);
-
-    color: var(--anthracite-dark);
+  .header-cta .btn__icon {
+    width: 36px;
+    height: 36px;
   }
 
+  .header-cta[aria-current="page"] {
+    border-color: var(--color-sand);
+  }
 
-  .mobile-menu-button {
+  .menu-toggle {
     display: none;
-
-    width: 42px;
-    height: 42px;
-
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    gap: 7px;
-
-    background: transparent;
-
+    justify-self: end;
+    width: 48px;
+    height: 48px;
+    margin-right: -10px;
+    padding: 0;
     border: 0;
-
-    cursor: pointer;
+    background: transparent;
+    color: inherit;
   }
 
-
-  .mobile-menu-button span {
-    width: 27px;
-    height: 1px;
-
+  .menu-toggle-lines {
+    position: relative;
     display: block;
-
-    background: white;
-
-    transition:
-      transform 0.35s ease,
-      opacity 0.35s ease;
+    width: 26px;
+    height: 10px;
+    margin-inline: auto;
   }
 
-
-  .mobile-menu-button.active span:first-child {
-    transform: translateY(4px) rotate(45deg);
+  .menu-toggle-lines span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: currentColor;
+    transition: transform 0.35s var(--ease-out);
   }
 
-
-  .mobile-menu-button.active span:last-child {
-    transform: translateY(-4px) rotate(-45deg);
+  .menu-toggle-lines span:first-child {
+    top: 0;
   }
 
+  .menu-toggle-lines span:last-child {
+    bottom: 0;
+  }
 
-  /* MOBILE NAV */
+  [data-menu-open="true"] .menu-toggle-lines span:first-child {
+    transform: translateY(4.25px) rotate(45deg);
+  }
 
-  .mobile-nav {
+  [data-menu-open="true"] .menu-toggle-lines span:last-child {
+    transform: translateY(-4.25px) rotate(-45deg);
+  }
+
+  /* Mobile menu */
+
+  .mobile-menu {
     position: fixed;
-
+    z-index: 1;
     inset: 0;
-
-    z-index: 90;
-
-    visibility: hidden;
-    opacity: 0;
-
-    background: var(--anthracite-dark);
-
-    color: white;
-
-    transition:
-      opacity 0.4s ease,
-      visibility 0.4s ease;
-  }
-
-
-  .mobile-nav.active {
-    visibility: visible;
-    opacity: 1;
-  }
-
-
-  .mobile-nav-inner {
-    min-height: 100svh;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-
+    gap: 40px;
+    overflow-y: auto;
     padding:
-      145px
-      25px
-      35px;
+      calc(var(--header-height-compact) + 24px)
+      var(--gutter)
+      max(28px, env(safe-area-inset-bottom));
+    background: var(--color-ink);
+    animation: menu-in 0.35s var(--ease-out);
   }
 
-
-  .mobile-nav nav {
-    display: flex;
-    flex-direction: column;
+  .mobile-menu[hidden] {
+    display: none;
   }
 
+  .mobile-menu ol {
+    list-style: none;
+  }
 
-  .mobile-nav nav a {
+  .mobile-menu li a {
     display: flex;
-    align-items: center;
-
-    padding: 20px 0;
-
-    border-bottom: 1px solid rgba(255,255,255,.1);
-
+    align-items: baseline;
+    gap: 18px;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--color-on-dark-line);
     font-family: var(--font-display);
-
-    font-size: clamp(42px, 14vw, 70px);
-    font-weight: 400;
-
-    line-height: 1;
+    font-size: clamp(2.25rem, 9vw, 3.5rem);
+    line-height: 1.1;
   }
 
-
-  .mobile-nav nav a span {
-    width: 50px;
-
-    color: var(--beige);
-
+  .menu-index {
+    min-width: 2ch;
+    color: var(--color-sand);
     font-family: var(--font-body);
-
-    font-size: 9px;
-
-    letter-spacing: 0.1em;
+    font-size: var(--fs-label);
+    letter-spacing: 0.12em;
   }
 
+  .mobile-menu-footer {
+    display: grid;
+    gap: 24px;
+  }
 
-  .mobile-nav-bottom {
+  .mobile-menu-links {
     display: flex;
-    justify-content: space-between;
-
-    color: rgba(255,255,255,.45);
-
-    font-size: 9px;
-
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    flex-wrap: wrap;
+    gap: 8px 28px;
   }
 
+  .mobile-menu-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: var(--color-on-dark-muted);
+    font-size: var(--fs-small);
+  }
 
-  @media (max-width: 900px) {
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+    }
+  }
 
-    .site-header {
-      height: 88px;
-
+  @media (max-width: 1023.98px) {
+    .header-bar {
       grid-template-columns: 1fr auto;
-
-      padding: 0 22px;
+      height: var(--header-height-compact);
     }
-
-
-    .site-header.scrolled {
-      height: 72px;
-    }
-
 
     .desktop-nav,
     .header-cta {
       display: none;
     }
 
-
-    .mobile-menu-button {
-      display: flex;
+    .menu-toggle {
+      display: block;
     }
 
-
-    .brand strong {
-      font-size: 27px;
+    .brand-name {
+      font-size: 1.5rem;
     }
+  }
 
-
-    .site-header.scrolled .brand strong {
-      font-size: 24px;
+  @media (min-width: 1024px) {
+    .mobile-menu {
+      display: none !important;
     }
+  }
 
-    .site-header {
-      height: 82px;
-
-      padding: 0 20px;
-    }
-
-    .site-header.scrolled {
-      height: 68px;
-    }
-
-    .brand {
-      font-size: 8px;
-    }
-
-    .brand strong {
-      margin-top: 4px;
-
-      font-size: 25px;
-    }
-
-    .site-header.scrolled .brand strong {
-      font-size: 23px;
-    }
-
-    .mobile-menu-button {
-      width: 44px;
-      height: 44px;
-
-      margin-right: -8px;
-    }
-
-    .mobile-nav-inner {
-      padding:
-        120px
-        22px
-        28px;
-    }
-
-    .mobile-nav nav a {
-      min-height: 80px;
-
-      padding: 18px 0;
-
-      font-size: clamp(42px, 13vw, 64px);
-    }
-
-    .mobile-nav-bottom {
-      gap: 20px;
-
-      font-size: 8px;
-    }
+  :global(html.menu-locked) {
+    overflow: hidden;
   }
 </style>

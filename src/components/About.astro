@@ -1,27 +1,30 @@
-<section class="about" id="ueber-uns">
-  <div class="about-inner">
+---
+import { Picture } from "astro:assets";
+import { images } from "../data/site";
 
-    <div class="about-image" data-reveal="left">
-      <div class="image-placeholder">
-        <span>Montageservice Finta</span>
-      </div>
+const values = ["Saubere Arbeit", "Präzise Ausführung", "Persönlicher Kontakt"];
+---
 
-      <div class="image-caption">
-        <span>Handwerk</span>
-        <span>mit Anspruch</span>
-      </div>
+<section class="section surface-paper" id="ueber-uns" aria-labelledby="ueber-uns-title">
+  <div class="container about">
+    <div class="about-media" data-reveal>
+      <Picture
+        src={images.about}
+        alt={images.aboutAlt}
+        formats={["avif", "webp"]}
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 900px) 45vw, 100vw"
+        class="about-image"
+      />
+      <p class="about-badge" aria-hidden="true">
+        Handwerk<br /><em>mit Anspruch</em>
+      </p>
     </div>
 
-    <div class="about-content" data-reveal="right">
-      <div class="section-number">
-        <span>04</span>
-        <span class="line"></span>
-        <span>Über uns</span>
-      </div>
+    <div class="about-content" data-reveal data-reveal-delay="1">
+      <p class="eyebrow">Über uns</p>
 
-      <p class="eyebrow">Montageservice Finta</p>
-
-      <h2>
+      <h2 class="display-l" id="ueber-uns-title">
         Persönlich.<br />
         Präzise.<br />
         <em>Verlässlich.</em>
@@ -29,267 +32,114 @@
 
       <div class="about-copy">
         <p>
-          Gute Montage bedeutet für uns mehr als nur das Zusammensetzen
-          einzelner Teile. Entscheidend sind Präzision, ein sauberes
-          Ergebnis und die Aufmerksamkeit für jedes Detail.
+          Gute Montage bedeutet für uns mehr als das Zusammensetzen einzelner
+          Teile. Entscheidend sind Präzision, ein sauberes Ergebnis und die
+          Aufmerksamkeit für jedes Detail.
         </p>
-
         <p>
           Ob Küche, Möbel oder Türen – jedes Projekt wird sorgfältig
           geplant und zuverlässig umgesetzt.
         </p>
       </div>
 
-      <div class="about-values">
-        <div>
-          <span>01</span>
-          <strong>Saubere Arbeit</strong>
-        </div>
-
-        <div>
-          <span>02</span>
-          <strong>Präzise Ausführung</strong>
-        </div>
-
-        <div>
-          <span>03</span>
-          <strong>Persönlicher Kontakt</strong>
-        </div>
-      </div>
+      <ul class="about-values">
+        {
+          values.map((value, index) => (
+            <li>
+              <span aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+              {value}
+            </li>
+          ))
+        }
+      </ul>
     </div>
-
   </div>
 </section>
 
 <style>
   .about {
-    padding:
-      clamp(110px, 12vw, 190px)
-      clamp(24px, 6vw, 110px);
-
-    background: var(--off-white);
-  }
-
-  .about-inner {
-    width: min(1350px, 100%);
-    margin: 0 auto;
-
     display: grid;
-    grid-template-columns: 0.95fr 1fr;
-    gap: clamp(60px, 8vw, 130px);
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
     align-items: center;
+    gap: clamp(48px, 8vw, 128px);
   }
 
-  .about-image {
+  .about-media {
     position: relative;
   }
 
-  .image-placeholder {
-    min-height: 740px;
-
-    display: flex;
-    align-items: flex-end;
-
-    padding: 30px;
-
-    background:
-      linear-gradient(
-        180deg,
-        rgba(20, 20, 19, 0.05),
-        rgba(20, 20, 19, 0.55)
-      ),
-      url("/images/about.jpeg") center / cover no-repeat;
-
-    background-color: #4a443d;
-
-    color: rgba(255,255,255,.75);
-
-    font-size: 9px;
-    letter-spacing: .18em;
-    text-transform: uppercase;
+  .about-media :global(.about-image) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 760px;
+    object-fit: cover;
+    border-radius: var(--radius);
   }
 
-  .image-caption {
+  .about-badge {
     position: absolute;
-    right: -30px;
-    bottom: 65px;
-
-    min-width: 190px;
-
-    padding: 24px 28px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-
-    background: var(--beige);
-
-    color: var(--anthracite-dark);
-
+    right: clamp(-32px, -2vw, -12px);
+    bottom: 56px;
+    padding: 22px 28px;
+    background: var(--color-sand);
+    color: var(--color-ink);
     font-family: var(--font-display);
-    font-size: 25px;
-    line-height: 1;
+    font-size: 1.625rem;
+    line-height: 1.05;
+    box-shadow: var(--shadow-soft);
   }
 
-  .section-number {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    margin-bottom: 55px;
-
-    color: #969087;
-
-    font-size: 9px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-  }
-
-  .section-number .line {
-    width: 26px;
-    height: 1px;
-
-    background: #aaa298;
-  }
-
-  .eyebrow {
-    margin-bottom: 25px;
-
-    color: #917c64;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(60px, 6vw, 98px);
-    font-weight: 400;
-    line-height: .86;
-    letter-spacing: -.035em;
-  }
-
-  h2 em {
-    color: #9b866f;
-    font-weight: 400;
+  .about-badge em {
+    font-style: italic;
   }
 
   .about-copy {
-    max-width: 540px;
-
-    margin-top: 60px;
-
     display: grid;
-    gap: 24px;
-
-    color: #706b65;
-
-    font-size: 13px;
-    line-height: 1.9;
+    gap: 20px;
+    max-width: 34em;
+    margin-top: clamp(32px, 4vw, 52px);
+    color: var(--color-text-muted);
+    font-size: 1.0625rem;
   }
 
   .about-values {
-    margin-top: 65px;
-
-    border-top: 1px solid #d8d0c6;
+    margin-top: clamp(36px, 4vw, 56px);
+    list-style: none;
+    border-top: 1px solid var(--color-line);
   }
 
-  .about-values > div {
-    min-height: 72px;
-
+  .about-values li {
     display: grid;
-    grid-template-columns: 55px 1fr;
+    grid-template-columns: 56px 1fr;
     align-items: center;
-
-    border-bottom: 1px solid #d8d0c6;
-  }
-
-  .about-values span {
-    color: #a39585;
-
-    font-size: 9px;
-    letter-spacing: .14em;
-  }
-
-  .about-values strong {
-    font-size: 11px;
+    min-height: 64px;
+    border-bottom: 1px solid var(--color-line);
+    font-size: 0.875rem;
     font-weight: 600;
-    letter-spacing: .07em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
-  @media (max-width: 900px) {
-    .about-inner {
+  .about-values span {
+    color: var(--color-accent);
+    font-size: var(--fs-label);
+    letter-spacing: 0.14em;
+  }
+
+  @media (max-width: 899.98px) {
+    .about {
       grid-template-columns: 1fr;
     }
 
-    .image-placeholder {
-      min-height: 600px;
+    .about-media :global(.about-image) {
+      aspect-ratio: 4 / 4.4;
     }
 
-    .image-caption {
-      right: 20px;
+    .about-badge {
+      right: 16px;
+      bottom: 16px;
+      padding: 16px 20px;
+      font-size: 1.375rem;
     }
-  }
-
-  @media (max-width: 600px) {
-    .about {
-      padding:
-        90px
-        20px;
-    }
-
-    .about-inner {
-      gap: 65px;
-    }
-
-    .image-placeholder {
-      min-height: 460px;
-    }
-
-    .image-caption {
-      right: 14px;
-      bottom: 14px;
-
-      padding: 18px 20px;
-
-      font-size: 20px;
-    }
-
-    .section-number {
-      margin-bottom: 32px;
-    }
-
-    h2 {
-      font-size: clamp(52px, 15vw, 76px);
-    }
-
-    .about-copy {
-      margin-top: 40px;
-
-      font-size: 12px;
-    }
-
-    .about-values {
-      margin-top: 45px;
-    }
-
-    .about-values > div {
-      min-height: 64px;
-    }
-  }
-
-  .image-placeholder {
-    transition:
-      background-size 1.2s
-      cubic-bezier(0.2, 0.65, 0.3, 1);
-
-    background-size: 100%;
-  }
-
-  .about-image:hover .image-placeholder {
-    background-size: 106%;
   }
 </style>

@@ -1,251 +1,119 @@
-<section class="contact" id="kontakt">
-  <div class="contact-inner" data-reveal>
+---
+import Icon from "./ui/Icon.astro";
+import { site, telHref } from "../data/site";
+---
 
-    <div class="contact-label">
-      <span>05</span>
-      <span class="line"></span>
-      <span>Kontakt</span>
-    </div>
+<section class="section contact" id="kontakt" aria-labelledby="kontakt-title">
+  <div class="container contact-inner" data-reveal>
+    <p class="eyebrow">Kontakt</p>
 
-    <p class="eyebrow">Ihr Projekt</p>
-
-    <h2>
+    <h2 class="display-xl" id="kontakt-title">
       Haben Sie ein<br />
       <em>Projekt geplant?</em>
     </h2>
 
-    <p class="contact-description">
-      Erzählen Sie uns von Ihrem Vorhaben.
-      Wir melden uns persönlich bei Ihnen und besprechen
-      die nächsten Schritte.
+    <p class="contact-lead">
+      Erzählen Sie uns von Ihrem Vorhaben – am besten mit ein paar Fotos.
+      Wir melden uns persönlich bei Ihnen und besprechen die nächsten
+      Schritte.
     </p>
 
     <div class="contact-actions">
-      <a href="/anfrage" class="primary-button">
-        <span>Projekt anfragen</span>
-        <span class="icon">↗</span>
+      <a href="/anfrage" class="btn btn--dark">
+        Projekt unverbindlich anfragen
+        <span class="btn__icon"><Icon name="arrow-up-right" size={16} /></span>
       </a>
 
-      <a
-        href="https://www.instagram.com/montageservicefinta/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="secondary-link"
-      >
+      {
+        site.contact.phone && (
+          <a href={telHref(site.contact.phone)} class="text-link">
+            <Icon name="phone" size={16} />
+            {site.contact.phone}
+          </a>
+        )
+      }
+
+      <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" class="text-link">
+        <Icon name="instagram" size={16} />
         Instagram
-        <span>↗</span>
+        <span class="sr-only">(öffnet in neuem Tab)</span>
       </a>
     </div>
-
   </div>
 </section>
 
 <style>
   .contact {
     position: relative;
-
-    padding:
-      clamp(130px, 15vw, 240px)
-      24px;
-
     overflow: hidden;
+    background: var(--color-sand);
+    color: var(--color-ink);
+  }
 
-    background: var(--beige);
-    color: var(--anthracite-dark);
+  .contact::before,
+  .contact::after {
+    content: "";
+    position: absolute;
+    border: 1px solid rgb(32 32 30 / 0.12);
+    border-radius: 50%;
+    pointer-events: none;
   }
 
   .contact::before {
-    content: "";
-
-    position: absolute;
-
-    width: 700px;
-    height: 700px;
-
     top: -360px;
     right: -260px;
-
-    border: 1px solid rgba(32,32,30,.12);
-    border-radius: 50%;
+    width: 700px;
+    height: 700px;
   }
 
   .contact::after {
-    content: "";
-
-    position: absolute;
-
-    width: 440px;
-    height: 440px;
-
     top: -230px;
     right: -130px;
-
-    border: 1px solid rgba(32,32,30,.1);
-    border-radius: 50%;
+    width: 440px;
+    height: 440px;
   }
 
   .contact-inner {
     position: relative;
-    z-index: 2;
-
-    width: min(1150px, 100%);
-    margin: 0 auto;
+    z-index: 1;
   }
 
-  .contact-label {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    margin-bottom: 65px;
-
-    color: rgba(32,32,30,.55);
-
-    font-size: 9px;
-    letter-spacing: .16em;
-    text-transform: uppercase;
+  .contact .eyebrow {
+    color: var(--color-ink);
   }
 
-  .contact-label .line {
-    width: 27px;
-    height: 1px;
-
-    background: rgba(32,32,30,.4);
+  .contact h2 em {
+    color: #5e4d3c; /* 4.6:1 auf sand */
   }
 
-  .eyebrow {
-    margin-bottom: 25px;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    font-family: var(--font-display);
-    font-size: clamp(70px, 9vw, 140px);
-    font-weight: 400;
-    line-height: .82;
-    letter-spacing: -.045em;
-  }
-
-  h2 em {
-    font-weight: 400;
-    color: #786552;
-  }
-
-  .contact-description {
-    max-width: 500px;
-
-    margin-top: 55px;
-
-    color: rgba(32,32,30,.68);
-
-    font-size: 14px;
-    line-height: 1.9;
+  .contact-lead {
+    max-width: 32em;
+    margin-top: clamp(32px, 4vw, 52px);
+    color: rgb(20 20 19 / 0.8);
+    font-size: var(--fs-lead);
+    line-height: 1.75;
   }
 
   .contact-actions {
-    margin-top: 55px;
-
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 40px;
+    gap: 20px 36px;
+    margin-top: clamp(36px, 4vw, 52px);
   }
 
-  .primary-button {
-    min-width: 245px;
-
-    padding: 18px 18px 18px 25px;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 30px;
-
-    background: var(--anthracite-dark);
-    color: white;
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .11em;
-    text-transform: uppercase;
-
-    transition:
-      transform .3s ease,
-      background .3s ease;
+  .contact .text-link {
+    border-color: rgb(20 20 19 / 0.35);
   }
 
-  .primary-button:hover {
-    transform: translateY(-3px);
-    background: #2d2c29;
-  }
-
-  .icon {
-    width: 36px;
-    height: 36px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid rgba(255,255,255,.3);
-  }
-
-  .secondary-link {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-
-    padding-bottom: 7px;
-
-    border-bottom: 1px solid rgba(32,32,30,.35);
-
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-  }
-
-  @media (max-width: 600px) {
-    .contact {
-      padding:
-        110px
-        20px;
-    }
-
-    .contact-label {
-      margin-bottom: 45px;
-    }
-
-    h2 {
-      font-size: clamp(58px, 16vw, 82px);
-
-      line-height: 0.86;
-    }
-
-    .contact-description {
-      margin-top: 38px;
-
-      font-size: 12px;
-    }
-
+  @media (max-width: 599.98px) {
     .contact-actions {
       flex-direction: column;
-      align-items: stretch;
-
-      gap: 28px;
-
-      margin-top: 42px;
+      align-items: flex-start;
     }
 
-    .primary-button {
+    .contact-actions .btn {
       width: 100%;
-    }
-
-    .secondary-link {
-      width: max-content;
     }
   }
 </style>
