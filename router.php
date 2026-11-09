@@ -1,21 +1,37 @@
 <?php
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+/*
+ * Router für den lokalen PHP-Testserver (bildet .htaccess nach):
+ *
+ *   npm run build
+ *   php -S localhost:8080 -t dist router.php
+ */
 
-$file = __DIR__ . '/dist' . $path;
+$path = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
+$dist = __DIR__ . '/dist';
 
-if ($path !== '/' && file_exists($file)) {
-    return false;
-}
-
-if ($path !== '/' && is_dir($file) && file_exists($file . '/index.html')) {
-    return false;
-}
-
-if ($path !== '/' && !file_exists($file)) {
-    http_response_code(404);
-    readfile(__DIR__ . '/dist/404.html');
+if (str_contains($path, '..')) {
+    http_response_code(400);
     exit;
 }
 
-return false;
+// Echte Dateien (Assets, PHP-Endpunkt) direkt ausliefern
+if ($path !== '/' && is_file($dist . $path)) {
+    return false;
+}
+
+// /anfrage -> /anfrage.html
+$htmlFile = $dist . rtrim($path, '/') . '.html';
+if ($path !== '/' && is_file($htmlFile)) {
+    header('Content-Type: text/html; charset=utf-8');
+    readfile($htmlFile);
+    exit;
+}
+
+if ($path === '/') {
+    return false;
+}
+
+http_response_code(404);
+header('Content-Type: text/html; charset=utf-8');
+readfile($dist . '/404.html');
