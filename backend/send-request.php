@@ -211,10 +211,13 @@ try {
     $mail->Port = (int) $config['port'];
     $mail->Timeout = 20;
 
-    $mail->SMTPSecure = match ($config['encryption'] ?? 'smtps') {
+    $encryption = $config['encryption'] ?? 'smtps';
+    $mail->SMTPSecure = match ($encryption) {
         'starttls' => PHPMailer::ENCRYPTION_STARTTLS,
+        'none' => '', // nur für lokale Test-Mailserver
         default => PHPMailer::ENCRYPTION_SMTPS,
     };
+    $mail->SMTPAutoTLS = $encryption !== 'none';
 
     $mail->CharSet = PHPMailer::CHARSET_UTF8;
     $mail->setFrom((string) $config['from_email'], (string) $config['from_name']);
@@ -222,7 +225,7 @@ try {
     $mail->addReplyTo($data['email'], $data['name']);
 
     foreach ($attachments as $attachment) {
-        $mail->addAttachment($attachment['path'], $attachment['name']);
+        $mail->addAttachment($attachment['path'], $attachment['name'], PHPMailer::ENCODING_BASE64, $attachment['mime']);
     }
 
     $mail->isHTML(true);

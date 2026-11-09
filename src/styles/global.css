@@ -400,7 +400,7 @@ p {
    SCROLL-REVEAL (nur aktiv, wenn JS läuft – siehe Layout)
 ========================================================= */
 
-.js [data-reveal] {
+.reveal-ready [data-reveal] {
   opacity: 0;
   transform: translateY(28px);
   transition:
@@ -414,7 +414,7 @@ p {
 [data-reveal-delay="3"] { --reveal-delay: 3; }
 [data-reveal-delay="4"] { --reveal-delay: 4; }
 
-.js [data-reveal].is-visible {
+.reveal-ready [data-reveal].is-visible {
   opacity: 1;
   transform: none;
 }
@@ -437,7 +437,7 @@ p {
     transition-delay: 0s !important;
   }
 
-  .js [data-reveal] {
+  .reveal-ready [data-reveal] {
     opacity: 1;
     transform: none;
   }

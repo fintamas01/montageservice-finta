@@ -8,6 +8,13 @@ import "@fontsource/manrope/600.css";
 
 import "../styles/global.css";
 
+// Kritische Schriftschnitte vorladen – verhindert Layout-Verschiebungen (CLS)
+import manrope400 from "@fontsource/manrope/files/manrope-latin-400-normal.woff2?url";
+import manrope500 from "@fontsource/manrope/files/manrope-latin-500-normal.woff2?url";
+import manrope600 from "@fontsource/manrope/files/manrope-latin-600-normal.woff2?url";
+import cormorant400 from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-normal.woff2?url";
+import cormorant400Italic from "@fontsource/cormorant-garamond/files/cormorant-garamond-latin-400-italic.woff2?url";
+
 import { getImage } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -37,6 +44,8 @@ const ogImage = await getImage({
   quality: 80,
 });
 const socialImage = new URL(ogImage.src, siteUrl);
+
+const preloadFonts = [manrope400, manrope500, manrope600, cormorant400, cormorant400Italic];
 ---
 
 <!doctype html>
@@ -44,7 +53,8 @@ const socialImage = new URL(ogImage.src, siteUrl);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline>document.documentElement.classList.add("js");</script>
+
+    {preloadFonts.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />)}
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -93,6 +103,9 @@ const socialImage = new URL(ogImage.src, siteUrl);
       if (reduceMotion || !("IntersectionObserver" in window)) {
         revealElements.forEach((el) => el.classList.add("is-visible"));
       } else {
+        // Erst hier verstecken: Schlägt das Skript fehl, bleibt alles sichtbar.
+        document.documentElement.classList.add("reveal-ready");
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {

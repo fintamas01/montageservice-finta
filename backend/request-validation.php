@@ -158,7 +158,7 @@ function validate_request(array $input, ?int $now = null): array
  *
  * @param array<string, mixed>|null $files Eintrag $_FILES['photos']
  * @param callable(string): (string|false) $detectMime
- * @return list<array{path: string, name: string}>
+ * @return list<array{path: string, mime: string, name: string}>
  * @throws RequestValidationError
  */
 function validate_uploads(?array $files, callable $detectMime): array
@@ -210,6 +210,7 @@ function validate_uploads(?array $files, callable $detectMime): array
 
         $attachments[] = [
             'path' => $tmpName,
+            'mime' => $mime,
             'name' => sprintf('projektfoto-%02d.%s', count($attachments) + 1, $limits['mime_types'][$mime]),
         ];
     }
